@@ -1,0 +1,152 @@
+/* ═══════════════════════════════════════════════════
+   myHQ Training Platform — Design System
+   Tokens, base styles, typography, top nav
+   ═══════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════
+   myHQ — Origin Story · elegant edition
+   Brand tokens from myHQ_Brand_Guidelines.md
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Brand palette */
+  --blue:        #1E22AA;
+  --blue-light:  #676BE4;
+  --mint:        #ADDFB3;
+  --teal:        #96E6DC;
+  --coral:       #FF7351;
+  --amber:       #FFB848;
+  --peach:       #F4BEAA;
+
+  /* Editorial neutrals */
+  --paper:       #F4F1E8;   /* warm cream page */
+  --paper-2:     #ECE7D8;   /* deeper cream for cards */
+  --paper-3:     #E5DFCC;   /* darkest cream */
+  --ink:         #0B0F2C;   /* near-black w/ blue undertone */
+  --ink-2:       #2A2E4A;
+  --body:        #4A4D63;
+  --muted:       #94909C;
+  --hairline:    rgba(11,15,44,0.10);
+  --hairline-2:  rgba(11,15,44,0.06);
+  --white:       #FFFFFF;
+
+  /* Type */
+  --sans:        'Manrope', 'Mont', system-ui, -apple-system, sans-serif;
+  --serif:       'Instrument Serif', 'Times New Roman', serif;
+  --mono:        'JetBrains Mono', ui-monospace, monospace;
+
+  /* Motion */
+  --ease:        cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout */
+  --pad-x:       clamp(20px, 5vw, 64px);
+  --max:         1320px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+}
+
+/* Page grain removed for standalone bundling */
+body::before { content: none; }
+
+::selection { background: var(--mint); color: var(--blue); }
+
+/* ─────────────────────────────────────────────
+   TOP NAV
+   ───────────────────────────────────────────── */
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(244, 241, 232, 0.85);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid var(--hairline-2);
+}
+.topnav-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 14px var(--pad-x);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+.brand {
+  display: flex; align-items: center; gap: 12px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+}
+.brand-mark {
+  width: 32px; height: 32px;
+  background: var(--ink);
+  border-radius: 8px;
+  display: grid; place-items: center;
+  color: var(--paper);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1;
+}
+.brand-mark svg { width: 16px; height: 16px; }
+
+.nav-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.nav-center .chap-num { color: var(--ink); font-weight: 600; }
+.nav-center .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--blue); }
+
+.nav-pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.nav-pill {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--body);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s var(--ease);
+  white-space: nowrap;
+}
+.nav-pill:hover { background: rgba(11,15,44,0.05); color: var(--ink); }
+.nav-pill.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+.nav-pill.hub {
+  font-size: 13px;
+  color: var(--body);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-pill.hub::before { content: '←'; font-size: 14px; }

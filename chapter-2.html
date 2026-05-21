@@ -1,0 +1,2496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>myHQ — Chapter 02: The Origin Story</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- myHQ Design System -->
+  <link rel="stylesheet" href="styles/design-system.css">
+  <link rel="stylesheet" href="styles/components.css">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       CHAPTER 2 — PAGE-SPECIFIC OVERRIDES
+       Only add styles here that are unique to this chapter.
+       Everything shared goes in design-system.css or components.css
+       ═══════════════════════════════════════════════════════════ */
+
+    /* ── VIDEO LIGHTBOX ── */
+    .vlb-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(11,15,44,0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+    }
+    .vlb-overlay.open { display: flex; }
+    .vlb-card {
+      background: var(--paper);
+      border: 1px solid var(--hairline);
+      border-radius: 20px;
+      box-shadow: 0 32px 80px rgba(11,15,44,0.22);
+      width: min(900px, 92vw);
+      overflow: hidden;
+      animation: vlbIn 0.3s var(--ease-out) forwards;
+    }
+    @keyframes vlbIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .vlb-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--hairline-2);
+      background: var(--white);
+    }
+    .vlb-eyebrow {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .vlb-title {
+      font-family: var(--sans);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .vlb-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .vlb-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--ink);
+    }
+    .vlb-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Hero video — lives in the right sidebar */
+    .hero-video-wrap {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .hero-video-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hero-video-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--coral);
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .hero-video-frame {
+      position: relative;
+      width: 100%;
+      padding-top: 56.25%; /* 16:9 ratio */
+      border: 2.5px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      background: var(--ink);
+      overflow: hidden;
+      transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+    }
+    .hero-video-frame:hover {
+      box-shadow: 6px 6px 0 var(--blue);
+      transform: translate(-2px, -2px);
+    }
+    .hero-video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ── PERSON CARDS — photo-first ── */
+    .person-card.flat {
+      position: relative;
+      cursor: pointer;
+      perspective: none;
+      background: var(--ink);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(11,15,44,0.10);
+      overflow: hidden;
+      aspect-ratio: 3/4;
+      min-height: unset;
+      transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease);
+    }
+    .person-card.flat:hover {
+      box-shadow: 0 12px 36px rgba(11,15,44,0.18);
+      transform: translateY(-3px);
+    }
+    /* Full-bleed photo */
+    .person-card.flat .person-banner {
+      position: absolute;
+      inset: 0;
+      height: 100%;
+      border: none;
+      background: var(--ink);
+      overflow: hidden;
+    }
+    .person-card.flat .person-banner img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      transition: transform 0.5s var(--ease);
+    }
+    .person-card.flat:hover .person-banner img {
+      transform: scale(1.04);
+    }
+    /* Gradient overlay at bottom */
+    .person-card.flat .person-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(11,15,44,0.82) 0%, rgba(11,15,44,0.3) 45%, transparent 100%);
+    }
+    /* Initials fallback (Utkarsh — no photo) */
+    .person-card.flat .person-initials {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--ink) 100%);
+      font-size: 48px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: -0.04em;
+    }
+    /* Body sits at the bottom over the gradient */
+    .person-card.flat .person-body {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 20px 18px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .person-card.flat .person-name {
+      font-family: var(--sans);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .person-card.flat .person-role,
+    .person-card.flat .person-role * {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.7) !important;
+      margin-bottom: 12px;
+    }
+    /* "Click to see who they are" hint */
+    .person-card.flat .person-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--white);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      padding: 5px 12px;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      width: fit-content;
+      transition: background 0.2s;
+    }
+    .person-card.flat:hover .person-hint {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+    /* hide everything else */
+    .person-card.flat .person-pulse,
+    .person-card.flat .person-tagline,
+    .person-card.flat .person-inline-quote,
+    .person-card.flat .person-chips,
+    .person-card.flat .person-profile-btn { display: none; }
+
+    .success-initials img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      border-radius: 10px;
+    }
+    .person-card.flat .person-role {
+      color: var(--blue);
+    }
+    .person-card.flat .person-body {
+      padding: 18px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    /* Inline quote — replaces the flip-rear quote */
+    .person-inline-quote {
+      font-family: var(--serif);
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--blue);
+      border-left: 3px solid var(--blue);
+      padding-left: 12px;
+      margin: 0 0 14px 0;
+    }
+
+    /* Full profile button */
+    .person-profile-btn {
+      margin-top: auto;
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--blue);
+      background: transparent;
+      border: 2px solid var(--blue);
+      padding: 7px 14px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      align-self: flex-start;
+    }
+    .person-profile-btn:hover {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    /* ── 2030 AMBITION CARD ──────────────────────────────────── */
+    .tl-item.ambition .tl-dot {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+    .ambition-context {
+      font-size: 15px;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+
+    /* Chart outer wrapper */
+    .ambition-chart {
+      display: flex;
+      gap: 0;
+      border: 2.5px solid var(--ink);
+      box-shadow: 4px 4px 0 var(--ink);
+      background: #fff;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    /* Y-axis column */
+    .ab-yaxis {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 12px 8px 32px 10px;
+      background: var(--light);
+      border-right: 2px solid var(--ink);
+      min-width: 72px;
+      flex-shrink: 0;
+    }
+    .ab-ylabel {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--blue);
+      text-align: right;
+      line-height: 1;
+    }
+
+    /* Chart area (gridlines + bars + curve) */
+    .ab-chart-area {
+      position: relative;
+      flex: 1;
+      padding: 12px 16px 0 8px;
+    }
+
+    /* Gridlines */
+    .ab-grid {
+      position: absolute;
+      inset: 0;
+      padding: 12px 16px 0 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+    .ab-gridline {
+      width: 100%;
+      height: 1px;
+      background: rgba(30,34,170,0.1);
+    }
+    .ab-gridline-zero {
+      background: rgba(30,34,170,0.25);
+    }
+
+    /* Bars row */
+    .ab-bars {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      height: 240px;
+      padding-bottom: 0;
+    }
+    .ab-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100%;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+    .ab-val-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--blue);
+      text-align: center;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .ab-bar {
+      width: 100%;
+      background: var(--blue);
+      border: 2px solid var(--ink);
+      height: 0;
+      transition: height 1s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .ab-col.projected .ab-bar {
+      background: rgba(30,34,170,0.12);
+      border: 2.5px dashed var(--blue);
+    }
+    .ab-label-bot {
+      font-family: var(--mono);
+      font-size: 9.5px;
+      font-weight: 500;
+      color: var(--muted);
+      text-align: center;
+      padding: 6px 0 10px;
+      white-space: nowrap;
+    }
+
+    /* Mint growth curve SVG */
+    .ab-curve {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: calc(100% - 28px); /* stop above x-axis labels */
+      pointer-events: none;
+      z-index: 3;
+      top: 12px;
+    }
+
+    /* Driven by section */
+    .ab-drivers { margin-bottom: 18px; }
+    .ab-drivers-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .ab-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .ab-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border: 2.5px solid var(--ink);
+      box-shadow: 3px 3px 0 var(--ink);
+      background: #fff;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .ab-pill:hover {
+      box-shadow: 5px 5px 0 var(--blue);
+      transform: translate(-1px, -1px);
+    }
+    .ab-pill-icon { width: 18px; height: 18px; color: var(--blue); flex-shrink: 0; }
+    .ab-pill-icon svg { width: 100%; height: 100%; }
+
+    em, i { font-style: normal; }
+
+    /* ── TIMELINE PHOTO PLACEHOLDER ── */
+    .tl-photo {
+      margin: 20px 0;
+      border: 2.5px dashed var(--hairline);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--paper-2);
+      position: relative;
+    }
+    .tl-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .tl-photo-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 200px;
+      color: var(--muted);
+    }
+    .tl-photo-empty svg {
+      width: 28px; height: 28px;
+      stroke: var(--muted);
+      fill: none;
+      opacity: 0.5;
+    }
+    .tl-photo-empty span {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.5;
+    }
+    .tl-event { font-size: 1.18em; }
+    .tl-event em { font-weight: 700; font-family: var(--sans); }
+  </style>
+</head>
+
+<body>
+
+<!-- Scroll progress bar -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     TOP NAVIGATION
+     ══════════════════════════════════════════════════════════════ -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">m</span>
+      <span>myHQ — The Origin Story</span>
+    </a>
+    <div class="nav-center">
+      <span>Chapter <span class="chap-num">02</span> / 04</span>
+      <span class="dot"></span>
+      <span>Onboarding</span>
+    </div>
+    <div class="nav-pills">
+      <a class="nav-pill hub" href="index.html">Course Hub</a>
+      <a class="nav-pill active" href="#s-timeline">Timeline</a>
+      <a class="nav-pill" href="#s-team">Team</a>
+      <a class="nav-pill" href="#s-org">Role structures</a>
+      <a class="nav-pill" href="#s-orgchart">Org chart</a>
+      <a class="nav-pill" href="#s-success">Success stories</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     HERO SECTION
+     ══════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-glow" id="heroGlow"></div>
+  <div class="hero-inner">
+
+    <!-- LEFT: Headline + sub-copy + CTAs -->
+    <div class="hero-main">
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        <span>Chapter 02 · The Origin Story</span>
+      </div>
+
+      <h1 class="hero-h1">
+        <span class="hero-line"><span>From a</span></span>
+        <span class="hero-line"><span>friend's café</span></span>
+        <span class="hero-line"><span>with <span class="blue" id="heroBlue">empty seats</span></span></span>
+        <span class="hero-line"><span class="serif" style="color: rgb(30, 34, 170);">to India's fastest growing CRE platform.</span></span>
+      </h1>
+
+      <div class="hero-foot">
+        <p class="hero-sub">
+          It started with something pretty simple — the belief that people do their best work
+          when they're in the right environment. That belief became a mission.
+        </p>
+        <div class="hero-cta-row">
+          <a class="btn-primary" href="#s-timeline">
+            <span>Start the story</span>
+            <span class="arrow">→</span>
+          </a>
+          <a class="btn-ghost" href="#s-team">
+            <svg viewBox="0 0 24 24" stroke-width="1.8"><circle cx="9" cy="9" r="3"></circle><circle cx="16" cy="11" r="2.5"></circle><path d="M3 21v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"></path><path d="M16 16h2a3 3 0 0 1 3 3v2"></path></svg>
+            <span>Meet the team</span>
+          </a>
+        </div>
+      </div>
+    </div><!-- /hero-main -->
+
+    <!-- RIGHT: Vision + Video + Chapter navigation -->
+    <aside class="hero-side" id="heroSide">
+      <div class="hero-side-eyebrow">Our Vision</div>
+      <p class="hero-vision">"A world where everyone has the opportunity to <span class="accent">make magic</span>, everywhere."</p>
+
+      <!-- ═══ HERO VIDEO ═══════════════════════════════════════════
+           HOW TO UPDATE: Replace the Google Drive file ID in the src URL below.
+           1. Upload your video to Google Drive
+           2. Right-click → Share → "Anyone with the link" → Copy link
+           3. Extract the file ID from: drive.google.com/file/d/FILE_ID/view
+           4. Replace FILE_ID in the src below
+           ══════════════════════════════════════════════════════════ -->
+      <div class="hero-video-wrap">
+        <div class="hero-video-eyebrow">Watch — The myHQ Story</div>
+        <div class="hero-video-frame" onclick="openVideoLightbox()" style="cursor:pointer;">
+          <div style="position:absolute;inset:0;background:var(--ink);display:flex;align-items:center;justify-content:center;">
+            <div style="width:64px;height:64px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 28px rgba(30,34,170,0.45);">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="7,4 21,12 7,20"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video lightbox -->
+      <div id="videoLightbox" class="vlb-overlay">
+        <div class="vlb-card">
+          <div class="vlb-header">
+            <div>
+              <div class="vlb-eyebrow">Chapter 02 · Origin Story</div>
+              <div class="vlb-title">The myHQ Story</div>
+            </div>
+            <div class="vlb-actions">
+              <a href="https://drive.google.com/file/d/1wwAvkUOgfiJmIt4glcrTrSd8EBN7miiz/view" target="_blank" class="nav-pill">Open in Drive ↗</a>
+              <button onclick="closeVideoLightbox()" class="nav-pill active">✕ Close</button>
+            </div>
+          </div>
+          <div class="vlb-frame">
+            <iframe id="videoLightboxFrame" src="" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter navigation -->
+      <div class="chap-list">
+        <a class="chap-row done" href="#">
+          <span class="num">01</span>
+          <span>Our industry</span>
+          <span class="status">Done</span>
+        </a>
+        <a class="chap-row now" href="#s-timeline">
+          <span class="num">02</span>
+          <span>Origin Story</span>
+          <span class="status">Now</span>
+        </a>
+        <a class="chap-row upcoming" href="#">
+          <span class="num">03</span>
+          <span>Products</span>
+          <span class="status">Next</span>
+        </a>
+        <a class="chap-row upcoming" href="#">
+          <span class="num">04</span>
+          <span>Sales</span>
+          <span class="status">—</span>
+        </a>
+      </div>
+    </aside><!-- /hero-side -->
+
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 01: TIMELINE
+     ══════════════════════════════════════════════════════════════ -->
+<section class="section" id="s-timeline">
+  <div class="section-head reveal">
+    <div>
+      <div class="section-eyebrow">Section 01 · The Timeline</div>
+      <h2 class="section-h2">Milestone <span class="serif">by</span> <span class="blue">milestone.</span></h2>
+    </div>
+    <p class="section-sub">Click any year to unfold the story behind it — the funding rounds, the pivots, the people who said yes, and the moments where the next decade became inevitable.</p>
+  </div>
+
+  <div class="tl-wrap" id="track">
+    <div class="tl-rail"><div class="tl-rail-fill" id="railFill"></div></div>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 1 · 2015 · THE SPARK
+         To edit: update year, title, and body text below
+         ───────────────────────────────────────── -->
+    <article class="tl-item" data-phase="1">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">2015</span>The Spark</div>
+        <div class="tl-event">Two batchmates stuck in Bangalore traffic, asking the same question over <em style="color: rgb(30, 34, 170);">and over.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>Utkarsh Kawatra (ex-Helion Ventures) and Vinayak Aggarwal (ex-Goldman Sachs) had known each other since IIT Delhi. Years later, stuck in Bangalore traffic together, the same question kept coming up: <em>why can't people work from wherever they actually want?</em> That question is where myHQ came from.</p>
+            <div class="tl-photo">
+              <img src="photos_ch2/spark.jpg" alt="2015 · The Spark">
+            </div>
+
+            <!-- DID YOU KNOW accordion — edit teaser and body text -->
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">Why these two, specifically?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>Utkarsh and Vinayak weren't random co-founders. They'd known each other since <strong>IIT Delhi</strong> — but didn't actually start anything together back then. Utkarsh went into VC at Helion. Vinayak went to Goldman Sachs as a quant. The idea waited <strong>five years</strong> until they were both in Bangalore at the same time, frustrated by the same thing. Co-founder fit isn't a luxury — it's a precondition.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-teal">The Insight</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 2 · 2016 · THE MOVE
+         ───────────────────────────────────────── -->
+    <article class="tl-item" data-phase="2">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">2016</span>The Move</div>
+        <div class="tl-event">They had a friend with a café. The café had a problem. They saw <em style="color: rgb(30, 34, 170);">an opportunity.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>A friend ran a café in Delhi NCR that sat dead every morning — chairs up, tables empty, burning rent before the evening rush. <strong>Utkarsh and Vinayak looked at those empty chairs and saw a workspace.</strong> That's where myHQ actually starts.</p>
+            <div class="tl-photo">
+              <img src="photos_ch2/move.png" alt="2016 · The Move">
+            </div>
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">What did the founders quit to do this?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>Utkarsh walked away from a <strong>VC role at Helion Ventures</strong>. Vinayak walked away from <strong>Goldman Sachs</strong> as a Quant &amp; Algorithmic Trading Strategist. Both jobs paid extremely well. Both came with prestige. They left to run a <strong>day-pass concept out of someone else's café.</strong> The opportunity cost of starting myHQ was very real.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-teal">The Origin</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 3 · APR 2016 · FOUNDED
+         ───────────────────────────────────────── -->
+    <article class="tl-item milestone" data-phase="3">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">Apr '16</span>Founded</div>
+        <div class="tl-event">Free WiFi. Free coffee. Discounted menus. A place to make magic. <em style="color: rgb(30, 34, 170);">No strings.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>Come in, get WiFi, order at a discounted rate, work. No deposit, no monthly commitment. The café that used to sit empty before noon started filling up with freelancers, remote workers, and early founders — and that confirmed the core insight: <strong>idle space is wasted potential.</strong></p>
+            <div class="tl-photo">
+              <img src="photos_ch2/founded.png" alt="Apr '16 · Founded">
+            </div>
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">How small was the original team?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p><strong>Two co-founders. One café. Zero employees.</strong> The first year was Utkarsh and Vinayak doing literally everything — supply, demand, customer support, ops. Most of the early signups came from Utkarsh standing at the café entrance and pitching the concept to walk-ins. There was no growth team because there was no team.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-mint">Founded</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 4 · 2016–17 · FIRST LEGS
+         ───────────────────────────────────────── -->
+    <article class="tl-item" data-phase="4">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">2016–17</span>First Legs</div>
+        <div class="tl-event">No marketing budget. Just word of mouth. <em style="color: rgb(30, 34, 170);">And it was enough.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>They didn't run ads. People just told other people. One café became two, then five, then 20+ venues across Delhi NCR — <strong>Social, Philips MTV, CCD.</strong> The concept had legs; now it needed wings.</p>
+            <div class="tl-photo">
+              <img src="photos_ch2/first_legs.jpeg" alt="2016–17 · First Legs">
+            </div>
+
+            <!-- Funding callout -->
+            <div class="funding-callout">
+              <span class="funding-callout-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M6 7h12M6 12h12M9 7c0 4 4 4 4 7H6l7 6"></path></svg></span>
+              <div>
+                <span class="funding-callout-year">2017 · First Round</span>
+                <!-- UPDATE: edit investor names below -->
+                <div class="funding-callout-names">Neeraj Singh (Spinny) · Ashneer Grover (BharatPe)</div>
+              </div>
+            </div>
+
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">Why did founders back this round, not VCs?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>The 2017 round wasn't institutional capital. It was <strong>founder-to-founder belief.</strong> Neeraj Singh was building Spinny. Ashneer Grover was about to start BharatPe. They wrote cheques because they'd run their own zero-to-one and recognised the pattern. VCs at this stage were still trying to figure out if coworking was a real category. Operators-turned-investors saw it before VCs did.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-teal">20+ Spaces</span>
+            <span class="tl-badge badge-blue">2017 Angel Round</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 5 · 2017–18 · GROWING UP
+         ───────────────────────────────────────── -->
+    <article class="tl-item" data-phase="5">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">2017–18</span>Growing Up</div>
+        <div class="tl-event">Cafés were the start. Coworking was next. <em style="color: rgb(30, 34, 170);">The Day Pass is born.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>Cafés could only scale so far. They moved fast: <strong>100+ coworking spaces</strong> listed on the platform in short order. And with that came a new product — <strong>the Day Pass.</strong> Book a day, show up, work, leave. Pay only for what you use.</p>
+            <div class="tl-photo">
+              <img src="photos_ch2/growing_up.png" alt="2017–18 · Growing Up">
+            </div>
+            <div class="funding-callout">
+              <span class="funding-callout-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M6 7h12M6 12h12M9 7c0 4 4 4 4 7H6l7 6"></path></svg></span>
+              <div>
+                <span class="funding-callout-year">2018 · Second Round</span>
+                <div class="funding-callout-names">Anupam Mittal</div>
+              </div>
+            </div>
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">Why did the Day Pass change everything?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>Cafés had <strong>no infrastructure for work</strong> — no power outlets, unreliable wifi, ambient noise. Coworking spaces solved that. But coworking operators still sold annual memberships. The Day Pass was the unlock: take coworking-grade space and price it like a coffee. Suddenly the addressable market wasn't just full-time freelancers — it was <strong>every professional with a laptop and one productive day to spend.</strong></p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-teal">100+ Spaces</span>
+            <span class="tl-badge badge-blue">Day Pass Born</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 6 · 2018–19 · FIRST PRODUCTS
+         ───────────────────────────────────────── -->
+    <article class="tl-item milestone" data-phase="6">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">2018–19</span>First Products</div>
+        <div class="tl-event">A Shopify store. Day passes. Coworking listings. <em style="color: rgb(30, 34, 170);">Scrappy, but it worked.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>The platform at this stage was anything but polished. Virtual office services ran on a <strong>Shopify store</strong> — not a proprietary product, just the fastest way to take money and deliver something. Day passes were the core transaction: book a seat at a coworking space, show up, work, leave. And coworking listings were being added to the platform one by one, city by city.</p>
+
+            <p>None of this was elegant. But it was real. Paying customers. Real inventory. Actual transactions. The seeds of what would become three distinct business lines were being planted here — though nobody had given them proper names yet.</p>
+
+            <div class="funding-callout">
+              <span class="funding-callout-icon"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2"><path d="M6 7h12M6 12h12M9 7c0 4 4 4 4 7H6l7 6"></path></svg></span>
+              <div>
+                <span class="funding-callout-year">2019 · VC Round</span>
+                <div class="funding-callout-names">Led by India Quotient</div>
+              </div>
+            </div>
+
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">Where was the team actually working from?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>A 40-person team needs space to operate. Theirs was scrappy: started in <strong>Utkarsh's parents' basement</strong>, then moved to a <strong>2BHK apartment in Delhi</strong>, then to a small office. The team was running a workspace marketplace from rented residential rooms. The irony was entirely intentional — they used the product themselves before insisting clients did.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-teal">Shopify Store</span>
+            <span class="tl-badge badge-blue">Day Passes</span>
+            <span class="tl-badge badge-mint">India Quotient 2019</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 7 · 2020–21 · THE TEST (COVID)
+         ───────────────────────────────────────── -->
+    <article class="tl-item" data-phase="7">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">2020–21</span>The Test</div>
+        <div class="tl-event">COVID shut everything down. Buyout offers came in. <em style="color: rgb(30, 34, 170);">They said no to every one.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>COVID didn't ease them into a tough patch — it just turned the lights off. Multiple buyout offers came in. <strong>The founders said no to every single one.</strong> Then ANAROCK came — not as a rescue, but as the right fit: India's largest CRE advisory, and they wanted myHQ to keep being myHQ. The founders stayed. The mission stayed.</p>
+            <div class="tl-photo">
+              <img src="photos_ch2/anarock_headline.png" alt="2021 · ANAROCK">
+            </div>
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">Why ANAROCK and not anyone else?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>Multiple buyout offers came in during COVID. Most were <strong>fire-sale offers from people who saw a discounted asset.</strong> ANAROCK was different. They're India's biggest CRE advisory — they understood real estate at the deepest level, and they wanted myHQ to <strong>keep operating as myHQ.</strong> Not absorbed. Not rebranded. The founders stayed. The team stayed. The mission stayed.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-white">Resilience</span>
+            <span class="tl-badge badge-teal">ANAROCK 2021</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 8 · 2021–22 · NEW CHAPTER
+         ───────────────────────────────────────── -->
+    <article class="tl-item milestone" data-phase="8">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">2021–22</span>New Chapter</div>
+        <div class="tl-event">Three products, properly built. Four cities. <em style="color: rgb(30, 34, 170);">A real operation.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>With ANAROCK's backing, the verticals that had been forming for years were now fully live — and the team finally had the infrastructure to scale them properly.</p>
+            <!-- PHOTO: replace src with your image path -->
+            <div class="tl-photo">
+              <img src="photos_ch2/new_ch.png" alt="2021–22 · New Chapter">
+            </div>
+            <div class="verticals-grid">
+              <div class="vertical-card" onclick="openVerticalModal('am', event)">
+                <div class="vertical-card-name">Assisted Marketplace</div>
+                <div class="vertical-card-desc">Full-service advisory for businesses finding managed office space, end to end.</div>
+              </div>
+              <div class="vertical-card" onclick="openVerticalModal('vo', event)">
+                <div class="vertical-card-name">Virtual Office</div>
+                <div class="vertical-card-desc">A proper product line. Business address, GST, compliance — not a workaround.</div>
+              </div>
+              <div class="vertical-card" style="grid-column: span 2;" onclick="openVerticalModal('od', event)">
+                <div class="vertical-card-name">On Demand</div>
+                <div class="vertical-card-desc">The original model — day passes and meeting rooms — now at scale. Two head offices: Bengaluru (tech) and Gurugram (business).</div>
+              </div>
+            </div>
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">What changed under ANAROCK that wasn't obvious?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>The visible changes were the easy part — bigger team, more cities, real verticals. The invisible change was <strong>credibility on enterprise calls.</strong> Pre-ANAROCK, myHQ was "a coworking app." Post-ANAROCK, it was "myHQ by ANAROCK" — which gave the sales team a different conversation: now you weren't pitching against the operator, you were pitching <strong>India's largest CRE advisory</strong> as the broker. That repositioning unlocked deal sizes that weren't reachable before.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-mint">3 Verticals Live</span>
+            <span class="tl-badge badge-teal">4 Cities</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 9 · TODAY · 2026
+         ───────────────────────────────────────── -->
+    <article class="tl-item milestone active" data-phase="9">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">Today</span>2026</div>
+        <div class="tl-event">India's fastest growing CRE platform. <em style="color: rgb(30, 34, 170);">And they're just getting started.</em></div>
+        <button class="tl-toggle" aria-label="Collapse"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+            <p>From a friend's café with empty chairs to India's fastest-growing CRE platform. <strong>Same mission. Completely different scale.</strong></p>
+            <div class="tl-photo">
+              <img src="photos_ch2/today.jpeg" alt="Today · 2026">
+            </div>
+            <div class="funding-callout intl">
+              <span class="funding-callout-icon" style="color:#2e7d36"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"></path></svg></span>
+              <div>
+                <span class="funding-callout-year" style="color:#2e7d36">What's next · International</span>
+                <div class="funding-callout-names">myHQ is taking the model global through <a href="https://myhqspaces.com" target="_blank" style="color:var(--blue);font-weight:600;text-decoration:none;border-bottom:1px solid var(--mint);">myhqspaces.com</a></div>
+              </div>
+            </div>
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">Why go international now?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>India is still the core market — but <strong>flexible workspace is becoming the default globally</strong>, not just here. myhqspaces.com is the international play: same model, different geographies. The bet is that what worked in India (operator-agnostic advisory + transparent inventory) translates because the underlying problem — businesses needing space without being trapped by it — is universal. Going global isn't a vanity move; it's the natural extension of a model that's already proven.</p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-teal">Today</span>
+            <span class="tl-badge badge-mint">Going Global</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+
+    <!-- ─────────────────────────────────────────
+         PHASE 10 · 2030 · THE AMBITION
+         To edit: update bar values in the data-val attributes below,
+         and the driven-by pill labels if priorities shift
+         ───────────────────────────────────────── -->
+    <article class="tl-item milestone ambition" data-phase="10">
+      <div class="tl-dot"></div>
+      <div class="tl-head">
+        <div class="tl-num"><span class="year">2030</span>The Ambition</div>
+        <div class="tl-event">35X in 3 years. <em style="color: rgb(30, 34, 170);">10X more by 2030.</em></div>
+        <button class="tl-toggle" aria-label="Expand"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
+      </div>
+      <div class="tl-body">
+        <div class="tl-body-inner">
+          <div class="tl-detail">
+
+            <p class="ambition-context">From ₹20 Cr to ₹1200 Cr. The next chapter ends at <strong>₹5000 Cr.</strong></p>
+
+            <!-- ── GROWTH CHART ───────────────────────────────────
+                 To update values: change data-val on each .ab-col
+                 Projected bar has class "projected"
+                 ─────────────────────────────────────────────────── -->
+            <div class="ambition-chart" id="ambitionChart">
+              <!-- Y-axis labels -->
+              <div class="ab-yaxis">
+                <div class="ab-ylabel">₹5000 Cr</div>
+                <div class="ab-ylabel">₹4000 Cr</div>
+                <div class="ab-ylabel">₹3000 Cr</div>
+                <div class="ab-ylabel">₹2000 Cr</div>
+                <div class="ab-ylabel">₹1000 Cr</div>
+                <div class="ab-ylabel">₹0</div>
+              </div>
+              <!-- Chart area: gridlines + bars -->
+              <div class="ab-chart-area">
+                <!-- Horizontal gridlines (6 lines matching Y-axis ticks) -->
+                <div class="ab-grid">
+                  <div class="ab-gridline"></div>
+                  <div class="ab-gridline"></div>
+                  <div class="ab-gridline"></div>
+                  <div class="ab-gridline"></div>
+                  <div class="ab-gridline"></div>
+                  <div class="ab-gridline ab-gridline-zero"></div>
+                </div>
+                <!-- Bars -->
+                <div class="ab-bars">
+                  <div class="ab-col" data-val="20">
+                    <div class="ab-val-label">₹20 Cr</div>
+                    <div class="ab-bar"></div>
+                    <div class="ab-label-bot">FY 22</div>
+                  </div>
+                  <div class="ab-col" data-val="200">
+                    <div class="ab-val-label">₹200 Cr</div>
+                    <div class="ab-bar"></div>
+                    <div class="ab-label-bot">FY 23</div>
+                  </div>
+                  <div class="ab-col" data-val="400">
+                    <div class="ab-val-label">₹400 Cr</div>
+                    <div class="ab-bar"></div>
+                    <div class="ab-label-bot">FY 24</div>
+                  </div>
+                  <div class="ab-col" data-val="700">
+                    <div class="ab-val-label">₹700 Cr</div>
+                    <div class="ab-bar"></div>
+                    <div class="ab-label-bot">FY 25</div>
+                  </div>
+                  <div class="ab-col" data-val="1200">
+                    <div class="ab-val-label">₹1200 Cr</div>
+                    <div class="ab-bar"></div>
+                    <div class="ab-label-bot">FY 26</div>
+                  </div>
+                  <div class="ab-col projected" data-val="5000">
+                    <div class="ab-val-label">₹5000 Cr</div>
+                    <div class="ab-bar"></div>
+                    <div class="ab-label-bot">FY 30</div>
+                  </div>
+                </div>
+                <!-- Mint growth curve drawn by JS -->
+                <svg class="ab-curve" id="ambitionCurve" preserveAspectRatio="none"></svg>
+              </div>
+            </div>
+
+            <!-- ── DRIVEN BY PILLS ────────────────────────────────
+                 To edit: update the label text inside each .ab-pill
+                 ─────────────────────────────────────────────────── -->
+            <div class="ab-drivers">
+              <div class="ab-drivers-label">Driven by</div>
+              <div class="ab-pills">
+                <div class="ab-pill">
+                  <span class="ab-pill-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+                  </span>
+                  <span>International Expansion</span>
+                </div>
+                <div class="ab-pill">
+                  <span class="ab-pill-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  </span>
+                  <span>New Business Lines</span>
+                </div>
+                <div class="ab-pill">
+                  <span class="ab-pill-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"/></svg>
+                  </span>
+                  <span>Tech &amp; Product Innovation</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tl-dyk">
+              <button class="tl-dyk-trigger" onclick="toggleDyk(this, event)" type="button">
+                <span class="tl-dyk-icon">?</span>
+                <span>
+                  <span class="tl-dyk-label">Did you know</span>
+                  <span class="tl-dyk-teaser">What does 10X require from the sales team?</span>
+                </span>
+                <span class="tl-dyk-chevron"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <div class="tl-dyk-body">
+                <p>The FY26 → FY30 jump doesn't happen on the same playbook. Deals get larger, mandates get more complex, clients get more sophisticated. For the sales team that means one thing: the faster you move up the complexity curve — from day passes to enterprise flex to multi-city mandates — the more directly you're contributing to this number. <strong>₹5000 Cr is the destination. Every deal you close is the distance.</strong></p>
+              </div>
+            </div>
+          </div>
+          <div class="tl-badges">
+            <span class="tl-badge badge-blue">₹5000 Cr GMV</span>
+            <span class="tl-badge badge-mint">₹500 Cr Revenue</span>
+            <span class="tl-badge badge-teal">10X</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div><!-- /tl-wrap -->
+
+
+  <!-- ─────────────────────────────────────────
+       STATS ROW
+       To edit: update data-count values and stat-foot text
+       ───────────────────────────────────────── -->
+  <div class="tl-stats reveal">
+    <div class="stat-card">
+      <span class="stat-label">Seats</span>
+      <div class="stat-num"><span data-count="50">0</span><span class="stat-suffix">K+</span></div>
+      <div class="stat-foot">Available across the network</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">GMV</span>
+      <div class="stat-num"><span style="font-size:0.75em;color:var(--blue);font-family:var(--serif);font-style:italic;margin-right:2px">₹</span><span data-count="500">0</span><span class="stat-suffix">Cr+</span></div>
+      <div class="stat-foot">Annual transactions</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Cities</span>
+      <div class="stat-num" style="font-size:45px;font-weight:700;">30+</div>
+      <div class="stat-foot">Covered today</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">B2B Clients</span>
+      <div class="stat-num"><span data-count="10">0</span><span class="stat-suffix">K+</span></div>
+      <div class="stat-foot">Businesses served</div>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 02: THE PEOPLE
+     ══════════════════════════════════════════════════════════════ -->
+<div class="people-section">
+  <section class="section" id="s-team" style="padding-top:120px;">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-eyebrow">Section 02 · The People</div>
+        <h2 class="section-h2">The humans <span class="serif">behind</span> <span class="blue">myHQ.</span></h2>
+      </div>
+      <p class="section-sub">Every founder. Every PnL head. Every story you'll need on a sales call. Click "Full profile" to open their background, anecdotes, and quotes.</p>
+    </div>
+
+    <!-- ─────────────────────────────────────────
+         FOUNDERS
+         To add a person: copy one <article> block, update initials,
+         name, role, tagline, quote, chips, and modal ID.
+         No flip — cards are flat. Quote shown inline.
+         ───────────────────────────────────────── -->
+    <div class="team-group-label" style="font-size:31px;">Founders</div>
+    <div class="team-grid">
+
+      <article class="person-card flat" onclick="openModal('utkarsh')">
+        <div class="person-banner">
+          <img src="photos_ch2/utkarsh.png" alt="Utkarsh Kawatra">
+        </div>
+        <div class="person-body">
+          <div class="person-name">Utkarsh Kawatra</div>
+          <div class="person-role">Co-Founder &amp; CEO</div>
+          <span class="person-hint">Who is this? →</span>
+        </div>
+      </article>
+
+      <article class="person-card flat" onclick="openModal('vinayak')">
+        <div class="person-banner">
+          <img src="photos_ch2/vinayak.jpeg" alt="Vinayak Aggarwal">
+        </div>
+        <div class="person-body">
+          <div class="person-name">Vinayak Aggarwal</div>
+          <div class="person-role">Co-Founder &amp; CTO</div>
+          <span class="person-hint">Who is this? →</span>
+        </div>
+      </article>
+
+    </div><!-- /founders team-grid -->
+
+
+    <!-- ─────────────────────────────────────────
+         LEADERSHIP
+         ───────────────────────────────────────── -->
+    <div class="team-group-label" style="font-size:31px;">Leadership</div>
+    <div class="team-grid">
+
+      <article class="person-card flat" onclick="openModal('manoj')">
+        <div class="person-banner">
+          <img src="photos_ch2/manoj.jpeg" alt="Manoj Kumar Yadav">
+        </div>
+        <div class="person-body">
+          <div class="person-name">Manoj Kumar Yadav</div>
+          <div class="person-role">PnL Head — Sales</div>
+          <span class="person-hint">Who is this? →</span>
+        </div>
+      </article>
+
+      <article class="person-card flat" onclick="openModal('nitin')">
+        <div class="person-banner">
+          <img src="photos_ch2/nitin.jpeg" alt="Nitin Agarwal">
+        </div>
+        <div class="person-body">
+          <div class="person-name">Nitin Agarwal</div>
+          <div class="person-role">PnL Head — Virtual Office</div>
+          <span class="person-hint">Who is this? →</span>
+        </div>
+      </article>
+
+      <article class="person-card flat" onclick="openModal('judhajit')">
+        <div class="person-banner">
+          <img src="photos_ch2/judhajit.jpeg" alt="Judhajit Bal">
+        </div>
+        <div class="person-body">
+          <div class="person-name">Judhajit Bal</div>
+          <div class="person-role">PnL Head — Growth</div>
+          <span class="person-hint">Who is this? →</span>
+        </div>
+      </article>
+
+      <article class="person-card flat" onclick="openModal('malvika')">
+        <div class="person-banner">
+          <img src="photos_ch2/malvika.jpeg" alt="Malvika Sankrityayan">
+        </div>
+        <div class="person-body">
+          <div class="person-name">Malvika Sankrityayan</div>
+          <div class="person-role">Marketing Head</div>
+          <span class="person-hint">Who is this? →</span>
+        </div>
+      </article>
+
+    </div><!-- /leadership team-grid -->
+  </section>
+</div><!-- /people-section -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 03: ORG STRUCTURE
+     ══════════════════════════════════════════════════════════════ -->
+<div class="org-section">
+  <section class="section" id="s-org">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-eyebrow">Section 03 · How We're Organised</div>
+        <h2 class="section-h2">Four tiers. <span class="blue">One PnL.</span></h2>
+      </div>
+      <p class="section-sub">myHQ runs lean. Everyone owns a number — from associates booking site visits to PnL heads owning ₹75Cr+ verticals. Here's how the org stacks up.</p>
+    </div>
+
+    <!-- ─────────────────────────────────────────
+         ORG TIERS
+         To edit: update designations, target ranges, team sizes, bonus info
+         ───────────────────────────────────────── -->
+    <div class="org-pyramid">
+
+      <div class="org-tier org-tier-1">
+        <button class="org-tier-left org-tier-toggle" onclick="toggleOrgTier(this)" aria-expanded="false">
+          <div class="org-tier-num">Tier 01 · Top of House</div>
+          <div class="org-tier-name">CXOs / PnL Heads</div>
+          <div class="org-tier-designations">DVP → Director</div>
+          <span class="org-tier-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="org-tier-right org-tier-body">
+          <div><div class="org-fact-label">What they do</div><div class="org-fact-value">Own overall business strategy &amp; PnL. Coordinate marketing, product &amp; finance on cross-functional bets.</div></div>
+          <div><div class="org-fact-label">Targets · cadence</div><div class="org-fact-value"><strong>₹15Cr – ₹75Cr / yr</strong><br>Tracked quarterly</div></div>
+          <div><div class="org-fact-label">Team size</div><div class="org-fact-value"><strong>30 – 150</strong> people</div></div>
+          <div><div class="org-fact-label">Bonus structure</div><div class="org-fact-value">Annual · variable<br>Revenue + profit sharing</div></div>
+        </div>
+      </div>
+
+      <div class="org-tier org-tier-2">
+        <button class="org-tier-left org-tier-toggle" onclick="toggleOrgTier(this)" aria-expanded="false">
+          <div class="org-tier-num">Tier 02 · Sub-PnL Owners</div>
+          <div class="org-tier-name">Business Leads</div>
+          <div class="org-tier-designations">Senior Manager → GM → AVP</div>
+          <span class="org-tier-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="org-tier-right org-tier-body">
+          <div><div class="org-fact-label">What they do</div><div class="org-fact-value">Drive a slice of the PnL. Support teams on bigger transactions. Ensure cross-team learnings flow.</div></div>
+          <div><div class="org-fact-label">Targets · cadence</div><div class="org-fact-value"><strong>₹5Cr – ₹20Cr / yr</strong><br>Tracked quarterly</div></div>
+          <div><div class="org-fact-label">Team size</div><div class="org-fact-value"><strong>10 – 30</strong> people</div></div>
+          <div><div class="org-fact-label">Bonus structure</div><div class="org-fact-value">Annual · variable<br>Revenue + profit sharing</div></div>
+        </div>
+      </div>
+
+      <div class="org-tier org-tier-3">
+        <button class="org-tier-left org-tier-toggle" onclick="toggleOrgTier(this)" aria-expanded="false">
+          <div class="org-tier-num">Tier 03 · Player-Coaches</div>
+          <div class="org-tier-name">Team Leads</div>
+          <div class="org-tier-designations">Assistant Manager → Senior Manager</div>
+          <span class="org-tier-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="org-tier-right org-tier-body">
+          <div><div class="org-fact-label">What they do</div><div class="org-fact-value">Drive daily team processes &amp; CRM hygiene. Support team in client meetings. Carry individual revenue too.</div></div>
+          <div><div class="org-fact-label">Targets · cadence</div><div class="org-fact-value"><strong>₹2Cr – ₹8Cr / yr</strong><br>Monthly / quarterly</div></div>
+          <div><div class="org-fact-label">Team size</div><div class="org-fact-value"><strong>1 – 10</strong> people</div></div>
+          <div><div class="org-fact-label">Bonus structure</div><div class="org-fact-value">Annual · variable<br>Revenue + direct team cost basis</div></div>
+        </div>
+      </div>
+
+      <div class="org-tier org-tier-4">
+        <button class="org-tier-left org-tier-toggle" onclick="toggleOrgTier(this)" aria-expanded="false">
+          <div class="org-tier-num">Tier 04 · The Front Line</div>
+          <div class="org-tier-name">Individual Contributors</div>
+          <div class="org-tier-designations">Associate → Analyst → Assistant Manager</div>
+          <span class="org-tier-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+        </button>
+        <div class="org-tier-right org-tier-body">
+          <div><div class="org-fact-label">What they do</div><div class="org-fact-value">Front-facing client interaction. Own CRM precision. Where the actual deals get done.</div></div>
+          <div><div class="org-fact-label">Targets · cadence</div><div class="org-fact-value"><strong>₹20L – ₹1.5Cr / yr</strong><br>Weekly / monthly</div></div>
+          <div><div class="org-fact-label">Team size</div><div class="org-fact-value">Individual<br>(no direct reports)</div></div>
+          <div><div class="org-fact-label">Bonus structure</div><div class="org-fact-value">Monthly · variable<br>Revenue + direct cost basis</div></div>
+        </div>
+      </div>
+
+    </div><!-- /org-pyramid -->
+
+  </section>
+</div><!-- /org-section -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 04: MIND MAP
+     ══════════════════════════════════════════════════════════════ -->
+<div style="background: var(--paper-2); border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline);">
+  <section class="section" id="s-orgchart">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-eyebrow">Section 04 · How We're Built</div>
+        <h2 class="section-h2">The myHQ <span class="serif">mind</span> <span class="blue">map.</span></h2>
+      </div>
+      <p class="section-sub">Click myHQ to begin. Each node unfolds the next layer — departments, sub-teams, and what they actually do.</p>
+    </div>
+
+    <div class="reveal" id="mm-root-wrap" style="display:flex; flex-direction:column; align-items:center; padding: 8px 0 48px;">
+
+      <!-- MIND MAP ─────────────────────────────────────────── -->
+      <style>
+        /* ── MIND MAP BASE ── */
+        .mm-node {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          cursor: pointer;
+          font-family: var(--sans);
+          line-height: 1.3;
+          transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease), background 0.2s, border-color 0.2s;
+          position: relative;
+          user-select: none;
+          border: none;
+          background: none;
+        }
+
+        /* Root — solid blue block, no pill */
+        .mm-root {
+          font-size: 30px;
+          font-weight: 700;
+          letter-spacing: -0.02em;
+          color: var(--white);
+          background: var(--blue);
+          padding: 32px 80px;
+          border-radius: 24px;
+          box-shadow: 0 4px 20px rgba(30,34,170,0.22);
+        }
+        .mm-root:hover  { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(30,34,170,0.28); }
+        .mm-root.active { background: var(--ink); box-shadow: 0 8px 28px rgba(11,15,44,0.22); }
+
+        /* Dept — white card, blue accent on active */
+        .mm-dept {
+          font-size: 24px;
+          font-weight: 700;
+          letter-spacing: -0.01em;
+          color: var(--blue);
+          background: var(--white);
+          border: 1.5px solid rgba(30,34,170,0.18);
+          border-radius: 20px;
+          padding: 24px 36px;
+          box-shadow: 0 2px 10px rgba(11,15,44,0.06);
+          white-space: nowrap;
+        }
+        .mm-dept:hover  { border-color: var(--blue); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(30,34,170,0.12); }
+        .mm-dept.active { background: var(--blue); color: var(--white); border-color: var(--blue); box-shadow: 0 6px 18px rgba(30,34,170,0.2); }
+
+        /* Sub — lighter card, indented feel */
+        .mm-sub {
+          font-size: 22px;
+          font-weight: 600;
+          letter-spacing: -0.005em;
+          color: var(--ink);
+          background: var(--paper);
+          border: 1px solid var(--hairline);
+          border-radius: 16px;
+          padding: 20px 32px;
+          box-shadow: 0 1px 6px rgba(11,15,44,0.05);
+          white-space: nowrap;
+        }
+        .mm-sub:hover  { border-color: var(--blue); color: var(--blue); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,34,170,0.10); }
+        .mm-sub.active { background: var(--blue); color: var(--white); border-color: var(--blue); }
+        .mm-sub.no-children { cursor: default; }
+        .mm-sub.no-children:hover { transform: none; border-color: var(--hairline); color: var(--ink); }
+
+        /* Leaf — mono label, paper bg */
+        .mm-leaf {
+          font-family: var(--mono);
+          font-size: 18px;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          padding: 14px 26px;
+          border-radius: 12px;
+          background: var(--paper-2);
+          color: var(--body);
+          border: 1px solid var(--hairline);
+          cursor: pointer;
+          white-space: nowrap;
+          transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+        .mm-leaf:hover { background: var(--blue); color: var(--white); border-color: var(--blue); }
+
+        /* Connector lines */
+        .mm-line {
+          background: rgba(30,34,170,0.15);
+          flex-shrink: 0;
+        }
+        .mm-line-v { width: 1.5px; }
+        .mm-line-h { height: 1.5px; }
+
+        /* Layer wrappers */
+        .mm-dept-layer,
+        .mm-sub-layer,
+        .mm-leaf-layer {
+          display: none;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          gap: 20px;
+          width: 100%;
+        }
+        .mm-dept-layer.open,
+        .mm-sub-layer.open,
+        .mm-leaf-layer.open { display: flex; }
+
+        .mm-dept-col,
+        .mm-sub-col,
+        .mm-leaf-col {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          flex: 1;
+          min-width: 0;
+          padding: 0 10px;
+        }
+
+        /* H-connector bar */
+        .mm-hbar-wrap {
+          position: relative;
+          width: 100%;
+          height: 0;
+          display: none;
+        }
+        .mm-hbar-wrap.open { display: block; }
+        .mm-hbar {
+          position: absolute;
+          top: 0;
+          height: 1.5px;
+          background: rgba(30,34,170,0.15);
+        }
+
+        /* Detail panel */
+        .mm-detail {
+          display: none;
+          background: var(--white);
+          border: 1px solid rgba(30,34,170,0.14);
+          border-radius: 16px;
+          padding: 24px 28px;
+          max-width: 560px;
+          width: 100%;
+          margin: 0 auto;
+          animation: mmFadeUp 0.3s var(--ease) forwards;
+        }
+        .mm-detail.open { display: block; }
+        @keyframes mmFadeUp {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .mm-detail-tag {
+          font-family: var(--mono);
+          font-size: 9.5px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--white);
+          background: var(--blue);
+          padding: 3px 10px;
+          border-radius: 6px;
+          display: inline-block;
+          margin-bottom: 12px;
+        }
+        .mm-detail-title {
+          font-family: var(--sans);
+          font-size: 20px;
+          font-weight: 700;
+          color: var(--ink);
+          letter-spacing: -0.025em;
+          margin-bottom: 10px;
+        }
+        .mm-detail-desc {
+          font-size: 14px;
+          color: var(--body);
+          line-height: 1.7;
+        }
+        .mm-detail-desc strong { color: var(--blue); font-weight: 600; }
+        .mm-hint {
+          font-family: var(--mono);
+          font-size: 10px;
+          font-weight: 600;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--muted);
+          margin-top: 24px;
+          opacity: 0;
+          transition: opacity 0.4s;
+        }
+        .mm-hint.show { opacity: 1; }
+      </style>
+
+      <!-- Root node -->
+      <button class="mm-node mm-root" id="mm-root">myHQ</button>
+      <div class="mm-hint" id="mm-hint">Click a department to learn more</div>
+
+      <!-- V line root → depts -->
+      <div class="mm-line mm-line-v" id="mm-vline-root" style="height:32px; display:none;"></div>
+
+      <!-- H bar spanning dept cols -->
+      <div class="mm-hbar-wrap" id="mm-hbar-dept-wrap" style="max-width:1280px; margin: 0 auto;">
+        <div class="mm-hbar" id="mm-hbar-dept"></div>
+      </div>
+
+      <!-- Dept layer -->
+      <div class="mm-dept-layer" id="mm-dept-layer" style="max-width:1280px; width:100%; margin: 0 auto;"></div>
+
+      <!-- Sub-dept zone (full width, appears below dept row) -->
+      <div id="mm-sub-zone" style="display:none; flex-direction:column; align-items:center; width:100%; max-width:1280px; margin:0 auto;"></div>
+
+      <!-- Detail panel (shared) -->
+      <div style="width:100%; max-width:900px; margin: 0 auto; padding: 0 0;">
+        <div style="height:0;" id="mm-detail-gap"></div>
+        <div class="mm-detail" id="mm-detail">
+          <div class="mm-detail-title" id="mm-detail-title"></div>
+          <div class="mm-detail-desc"  id="mm-detail-desc"></div>
+        </div>
+      </div>
+
+
+      <!-- END MIND MAP ──────────────────────────────────── -->
+
+    </div>
+  </section>
+</div><!-- /orgchart-section -->
+
+
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SECTION 05: SUCCESS STORIES
+     ══════════════════════════════════════════════════════════════ -->
+<style>
+  .success-section { background: var(--paper); }
+
+  .success-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-top: 8px;
+  }
+
+  .success-card {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.25s var(--ease), transform 0.25s var(--ease), border-color 0.25s;
+  }
+  .success-card:hover { box-shadow: 0 8px 28px rgba(11,15,44,0.09); transform: translateY(-2px); }
+  .success-card.open { border-color: rgba(30,34,170,0.2); box-shadow: 0 12px 36px rgba(11,15,44,0.11); transform: translateY(-2px); }
+
+  /* ── Card header ── */
+  .success-person {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+    border-bottom: 1px solid transparent;
+  }
+  .success-person:hover { background: var(--paper); }
+  .success-card.open .success-person { border-bottom-color: var(--hairline-2); }
+
+  .success-person-photo {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+    border: 1px solid var(--hairline);
+  }
+  .success-person-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+  .success-name {
+    font-family: var(--sans);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .success-joined-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .success-chevron {
+    color: var(--muted);
+    transition: transform 0.3s var(--ease), color 0.2s;
+    flex-shrink: 0;
+  }
+  .success-card.open .success-chevron { transform: rotate(180deg); color: var(--blue); }
+
+  /* ── Timeline arc body ── */
+  .success-body { display: none; }
+  .success-card.open .success-body { display: block; }
+
+  .success-arc {
+    padding: 32px 36px 36px;
+    position: relative;
+  }
+
+  /* Quote strip at top of body */
+  .success-quote {
+    font-family: var(--serif);
+    font-size: 16px;
+    color: var(--body);
+    line-height: 1.65;
+    padding: 0 0 24px;
+    border-bottom: 1px solid var(--hairline-2);
+    margin-bottom: 28px;
+  }
+  .success-quote::before {
+    content: '"';
+    font-size: 36px;
+    color: rgba(30,34,170,0.18);
+    font-family: var(--serif);
+    line-height: 0;
+    vertical-align: -14px;
+    margin-right: 4px;
+  }
+
+  /* The connecting line */
+  .success-arc-track {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    position: relative;
+  }
+  .success-arc-track::before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    width: 100%;
+    height: 1.5px;
+    background: linear-gradient(90deg, var(--hairline) 0%, rgba(30,34,170,0.3) 100%);
+    z-index: 0;
+  }
+
+  .success-stop {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+  .success-stop:last-child { align-items: flex-end; text-align: right; }
+
+  .success-stop-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--hairline);
+    background: var(--white);
+    margin-bottom: 16px;
+    flex-shrink: 0;
+  }
+  .success-stop:last-child .success-stop-dot {
+    background: var(--blue);
+    border-color: var(--blue);
+    box-shadow: 0 0 0 5px rgba(30,34,170,0.12);
+  }
+
+  .success-stop-year {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .success-stop:last-child .success-stop-year { color: var(--blue); }
+
+  .success-stop-role {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin-bottom: 10px;
+  }
+  .success-stop:last-child .success-stop-role { color: var(--blue); }
+
+  .success-stop-details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .success-stop-details li {
+    font-size: 13px;
+    color: var(--body);
+    line-height: 1.5;
+  }
+  .success-stop:last-child .success-stop-details li {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* Arrow */
+  .success-arc-arrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: rgba(30,34,170,0.3);
+    padding: 0 16px;
+    padding-top: 4px;
+    flex-shrink: 0;
+    z-index: 1;
+    position: relative;
+  }
+
+
+  @media (max-width: 860px) {
+    .success-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .success-arc { padding: 20px; }
+    .success-arc-track::before { display: none; }
+    .success-arc-track { flex-direction: column; gap: 28px; }
+    .success-stop, .success-stop:last-child { align-items: flex-start; text-align: left; }
+    .success-arc-arrow { display: none; }
+  }
+</style>
+
+<div class="success-section">
+  <section class="section" id="s-success">
+    <div class="section-head reveal">
+      <div>
+        <div class="section-eyebrow">Section 05 · Success Stories</div>
+        <h2 class="section-h2">Our leaders <span class="blue">grew from within.</span></h2>
+      </div>
+      <p class="section-sub">The next one could be you.</p>
+    </div>
+
+    <div class="success-grid reveal">
+
+      <!-- Manoj -->
+      <div class="success-card">
+        <div class="success-person" onclick="this.closest('.success-card').classList.toggle('open')">
+          <img class="success-person-photo" src="photos_ch2/manoj.jpeg" alt="Manoj Kumar Yadav">
+          <div class="success-person-info">
+            <div>
+              <div class="success-name">Manoj Kumar Yadav</div>
+              <div class="success-joined-badge">Joined 2017 · Founding Team</div>
+            </div>
+            <span class="success-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </div>
+        </div>
+        <div class="success-body">
+          <div class="success-arc">
+            <div class="success-quote">Real estate moves on relationships and trust. That hasn't changed. What's changed is the product — and ours is the best.</div>
+            <div class="success-arc-track">
+              <div class="success-stop">
+                <div class="success-stop-dot"></div>
+                <div class="success-stop-year">2017 · Joined</div>
+                <div class="success-stop-role">Campus hire</div>
+                <ul class="success-stop-details">
+                  <li>IIT Delhi</li>
+                  <li>Operations</li>
+                </ul>
+              </div>
+              <div class="success-arc-arrow">→</div>
+              <div class="success-stop">
+                <div class="success-stop-dot"></div>
+                <div class="success-stop-year">Now</div>
+                <div class="success-stop-role">Leadership Team — Business Head</div>
+                <ul class="success-stop-details">
+                  <li>₹300 Cr+ GMV · P&amp;L ₹40 Cr</li>
+                  <li>Team of 100+</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nitin -->
+      <div class="success-card">
+        <div class="success-person" onclick="this.closest('.success-card').classList.toggle('open')">
+          <img class="success-person-photo" src="photos_ch2/nitin.jpeg" alt="Nitin Agrawal">
+          <div class="success-person-info">
+            <div>
+              <div class="success-name">Nitin Agrawal</div>
+              <div class="success-joined-badge">Joined 2017 · Founding Team</div>
+            </div>
+            <span class="success-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </div>
+        </div>
+        <div class="success-body">
+          <div class="success-arc">
+            <div class="success-quote">Every company I built before myHQ taught me something different. Here, I get to use all of it.</div>
+            <div class="success-arc-track">
+              <div class="success-stop">
+                <div class="success-stop-dot"></div>
+                <div class="success-stop-year">2017 · Joined</div>
+                <div class="success-stop-role">Campus hire</div>
+                <ul class="success-stop-details">
+                  <li>IIT Delhi</li>
+                  <li>Growth &amp; Marketing</li>
+                </ul>
+              </div>
+              <div class="success-arc-arrow">→</div>
+              <div class="success-stop">
+                <div class="success-stop-dot"></div>
+                <div class="success-stop-year">Now</div>
+                <div class="success-stop-role">Leadership Team — Business Head</div>
+                <ul class="success-stop-details">
+                  <li>₹60 Cr+ GMV · P&amp;L ₹15 Cr</li>
+                  <li>Team of 50+</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Malvika -->
+      <div class="success-card">
+        <div class="success-person" onclick="this.closest('.success-card').classList.toggle('open')">
+          <img class="success-person-photo" src="photos_ch2/malvika.jpeg" alt="Malvika Sankrityayan">
+          <div class="success-person-info">
+            <div>
+              <div class="success-name">Malvika Sankrityayan</div>
+              <div class="success-joined-badge">Joined 2020 · SEO Specialist</div>
+            </div>
+            <span class="success-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </div>
+        </div>
+        <div class="success-body">
+          <div class="success-arc">
+            <div class="success-quote">Marketing in real estate isn't about flash. It's about earning trust at scale — and then doing it again.</div>
+            <div class="success-arc-track">
+              <div class="success-stop">
+                <div class="success-stop-dot"></div>
+                <div class="success-stop-year">2020 · Joined</div>
+                <div class="success-stop-role">SEO Specialist</div>
+                <ul class="success-stop-details">
+                  <li>NMIMS · 2–3 yrs experience</li>
+                  <li>SEO Content</li>
+                </ul>
+              </div>
+              <div class="success-arc-arrow">→</div>
+              <div class="success-stop">
+                <div class="success-stop-dot"></div>
+                <div class="success-stop-year">Now</div>
+                <div class="success-stop-role">Leadership Team — Marketing Head</div>
+                <ul class="success-stop-details">
+                  <li>SEO, SEM &amp; Brand</li>
+                  <li>₹15 Cr+ annual spends</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ayush -->
+      <div class="success-card">
+        <div class="success-person" onclick="this.closest('.success-card').classList.toggle('open')">
+          <img class="success-person-photo" src="photos_ch2/ayush.jpeg" alt="Ayush Jindal">
+          <div class="success-person-info">
+            <div>
+              <div class="success-name">Ayush Jindal</div>
+              <div class="success-joined-badge">Joined 2020 · Sales Consultant</div>
+            </div>
+            <span class="success-chevron"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></span>
+          </div>
+        </div>
+        <div class="success-body">
+          <div class="success-arc">
+            <div class="success-quote">myHQ gave me a platform to grow faster than I ever imagined. The numbers speak for themselves.</div>
+            <div class="success-arc-track">
+              <div class="success-stop">
+                <div class="success-stop-dot"></div>
+                <div class="success-stop-year">2020 · Joined</div>
+                <div class="success-stop-role">Sales Consultant</div>
+                <ul class="success-stop-details">
+                  <li>SRM Chennai · 1 yr experience</li>
+                  <li>Sales</li>
+                </ul>
+              </div>
+              <div class="success-arc-arrow">→</div>
+              <div class="success-stop">
+                <div class="success-stop-dot"></div>
+                <div class="success-stop-year">Now</div>
+                <div class="success-stop-role">Region Leader — City Head</div>
+                <ul class="success-stop-details">
+                  <li>₹80 Cr+ GMV · P&amp;L ₹10 Cr</li>
+                  <li>Team of 20+</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div><!-- /success-section -->
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     CHAPTER CLOSE
+     ══════════════════════════════════════════════════════════════ -->
+<div class="chapter-close-wrap">
+  <div class="chapter-close">
+    <div>
+      <div class="chapter-close-eyebrow">Chapter 02 Complete</div>
+      <h2 class="chapter-close-title">You know the story. <span class="serif">Now go</span> tell it.</h2>
+      <p class="chapter-close-sub">The origin story is one of your most powerful sales tools. Clients trust companies with a real story — and ours is genuinely good. Use it.</p>
+    </div>
+    <a class="chapter-close-btn" href="index.html">
+      <span>Continue to Chapter 03</span>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <span class="footer-brand">myHQ by ANAROCK</span>
+    <span>Internal training material · not for distribution</span>
+    <span>Chapter 2 of 4</span>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODALS — Product Verticals
+     These are opened by clicking the vertical cards in the timeline.
+     To edit content: find the matching data-vertical ID below.
+     ══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="verticalModalOverlay" onclick="closeVerticalModalOnBg(event)">
+  <div class="vertical-modal-box" id="verticalModalBox"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODALS — Team Profiles
+     These are opened by the "Full profile" button on person cards.
+     ══════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBg(event)">
+  <div class="modal-box">
+    <div class="modal-header" id="modalHeader">
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">
+        <svg viewBox="0 0 24 24" stroke-width="2.2" stroke="currentColor" fill="none"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+      </button>
+      <div class="modal-avatar" id="modalAvatar"></div>
+      <div class="modal-name" id="modalName"></div>
+      <div class="modal-role" id="modalRole"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+
+<!-- Interactions script — shared across all chapters -->
+<script src="js/interactions.js"></script>
+<script>
+(function(){
+  function init() {
+    var rootBtn = document.getElementById('mm-root');
+    if (!rootBtn) { console.warn('[mindmap] root button not found'); return; }
+
+    var DEPTS = [
+      {
+        id: 'finance', label: 'Finance', color: '',
+        tag: 'Dept 01', tagBg: '#1E22AA',
+        desc: "The backbone of the business. Finance handles <strong>invoice raising</strong>, <strong>payment mapping</strong>, and <strong>ledger reconciliations</strong> — making sure every rupee that comes in or goes out is accounted for. They also manage <strong>taxation and compliance</strong>. If you are waiting on a payout or a vendor invoice is stuck, Finance is your first call.",
+        subs: []
+      },
+      {
+        id: 'hr', label: 'HR & People', color: '',
+        tag: 'Dept 02', tagBg: '#1E22AA',
+        desc: "The team that keeps the humans running. Covers everything from bringing new talent in to making sure the people already here are growing, engaged, and (on Fridays) fed.",
+        subs: [
+          { id: 'talent', label: 'Talent Acquisition', tag: 'HR — Sub-team', tagBg: '#1E22AA', desc: "Finds, screens, and closes candidates across all functions. They manage the full hiring pipeline — JDs, sourcing, interviews, offer rollouts. If you are here, thank them." },
+          { id: 'hrops',  label: 'HR Operations',      tag: 'HR — Sub-team', tagBg: '#1E22AA', desc: "Payroll, onboarding paperwork, compliance, exits, and everything in between. They make sure employment contracts are real, Keka is updated, and nobody falls through the cracks." },
+          { id: 'lnd',    label: 'L&D',                tag: 'HR — Sub-team', tagBg: '#1E22AA', desc: "Builds the programs that help people get better at their jobs — structured onboarding, skill-building modules, and this very training program you are in right now." }
+        ]
+      },
+      {
+        id: 'marketing', label: 'Marketing', color: '',
+        tag: 'Dept 03', tagBg: '#1E22AA',
+        desc: "Drives everything demand-side across three focused sub-teams: <strong>SEO</strong>, <strong>Lead Qualification</strong>, and <strong>Demand Generation</strong>. Together they make sure the right clients find myHQ, raise their hand, and land in the sales funnel ready to close.",
+        subs: [
+          { id: 'seo', label: 'SEO',                tag: 'Marketing — Sub-team', tagBg: '#1E22AA', desc: "Owns organic discoverability. Makes sure myHQ ranks when a CFO Googles managed office space in Bengaluru at 9pm. Keyword strategy, on-page optimisation, content for search, technical site health." },
+          { id: 'lq',  label: 'Lead Qualification', tag: 'Marketing — Sub-team', tagBg: '#1E22AA', desc: "The first filter in the funnel. Before a lead hits AM Sales, this team assesses intent, budget, timeline, and fit. Quality in equals quality close rate." },
+          { id: 'dg',  label: 'Demand Generation',  tag: 'Marketing — Sub-team', tagBg: '#1E22AA', desc: "Creates and amplifies demand across paid, owned, and earned channels. Performance campaigns, social, events, email, partnerships — anything that puts myHQ in front of the right decision-maker at the right moment." }
+        ]
+      },
+      {
+        id: 'product', label: 'Product', color: '',
+        tag: 'Dept 04', tagBg: '#1E22AA',
+        desc: "Owns the roadmap and feature development for all three verticals: <strong>AM</strong>, <strong>VO</strong>, and <strong>OD</strong>. They translate business needs and user feedback into actual product decisions — what gets built, when, and why.",
+        subs: []
+      },
+      {
+        id: 'tech', label: 'Technology', color: '',
+        tag: 'Dept 05', tagBg: '#1E22AA',
+        desc: "End-to-end ownership of the platform — <strong>frontend</strong>, <strong>backend</strong>, <strong>infrastructure</strong>, and all <strong>internal tools</strong>. They keep the app running, the dashboard loading, and the integrations (like Zoho CRM) functioning.",
+        subs: []
+      },
+      {
+        id: 'business', label: 'Business', color: '',
+        tag: 'Dept 06', tagBg: '#1E22AA',
+        desc: "The revenue engine. Broken into three verticals, each with its own sales, ops, and business development teams. This is where deals get closed, clients get served, and the GMV number moves.",
+        subs: [
+          {
+            id: 'am', label: 'Assisted Marketplace', tag: 'Business — Vertical', tagBg: '#1E22AA', color: '',
+            desc: "City-wise consultant teams helping clients find and close on flex office spaces. The AM vertical drives the largest share of revenue and is the heart of the myHQ sales operation.",
+            leaves: [
+              { label: 'Sales',        tag: 'AM — Function', tagBg: '#1E22AA', desc: "City-wise consultants who own the end-to-end sales process — from first call to signed LOI. They manage client relationships, conduct site visits, and close deals on flex office mandates." },
+              { label: 'Biz Dev',      tag: 'AM — Function', tagBg: '#1E22AA', desc: "Manages new listings and maintains data quality of listed spaces on the myHQ platform. They onboard new operators, update inventory, and keep the supply side current and accurate." },
+              { label: 'Stacker Team', tag: 'AM — Function', tagBg: '#1E22AA', desc: "On-ground intelligence. Gathers real-time data on available spaces in each city — vacancies, seat counts, pricing — so consultants always have current, reliable inventory to pitch." }
+            ]
+          },
+          {
+            id: 'vo', label: 'Virtual Office', tag: 'Business — Vertical', tagBg: '#1E22AA',
+            desc: "Sells and manages virtual office registrations — GST addresses, mail handling, and meeting room access for businesses that need a credible business address without a physical seat.",
+            leaves: [
+              { label: 'Sales',      tag: 'VO — Function', tagBg: '#1E22AA', desc: "Handles inbound and outbound for Virtual Office registrations — GST address packages, mail handling, and compliance add-ons. Shorter sales cycles, volume-driven." },
+              { label: 'Operations', tag: 'VO — Function', tagBg: '#1E22AA', desc: "Manages fulfilment post-sale: document verification, address activation, renewal tracking, and client servicing for the virtual office product." },
+              { label: 'Biz Dev',    tag: 'VO — Function', tagBg: '#1E22AA', desc: "Expands the supply of registered virtual office addresses across cities and manages partner relationships with compliant address providers." }
+            ]
+          },
+          {
+            id: 'od', label: 'On Demand', tag: 'Business — Vertical', tagBg: '#1E22AA',
+            desc: "Pay-per-use access to coworking desks, meeting rooms, and day passes across the myHQ network. Serves individuals, freelancers, and companies with flexible, short-notice workspace needs.",
+            leaves: []
+          }
+        ]
+      }
+    ];
+
+    var rootOpen = false;
+    var activeDept = null;
+    var activeSub  = null;
+
+    var deptLayer = document.getElementById('mm-dept-layer');
+    var hbarWrap  = document.getElementById('mm-hbar-dept-wrap');
+    var hbar      = document.getElementById('mm-hbar-dept');
+    var vlineRoot = document.getElementById('mm-vline-root');
+    var subZone   = document.getElementById('mm-sub-zone');
+    var detail    = document.getElementById('mm-detail');
+    var detailTag = document.getElementById('mm-detail-tag');
+    var detailTitle = document.getElementById('mm-detail-title');
+    var detailDesc  = document.getElementById('mm-detail-desc');
+    var hint        = document.getElementById('mm-hint');
+    var detailGap   = document.getElementById('mm-detail-gap');
+
+    function showDetail(tag, tagBg, title, desc) {
+      detailTitle.textContent = title;
+      detailDesc.innerHTML = desc;
+      detailGap.style.height = '24px';
+      detail.classList.add('open');
+    }
+    function hideDetail() {
+      detail.classList.remove('open');
+      detailGap.style.height = '0';
+    }
+
+    function positionHBar(cols, wrapEl, barEl) {
+      if (!cols.length) return;
+      var wr = wrapEl.getBoundingClientRect();
+      var fr = cols[0].getBoundingClientRect();
+      var lr = cols[cols.length - 1].getBoundingClientRect();
+      var lp = ((fr.left + fr.width / 2) - wr.left) / wr.width * 100;
+      var rp = ((lr.left + lr.width / 2) - wr.left) / wr.width * 100;
+      barEl.style.left  = lp + '%';
+      barEl.style.width = (rp - lp) + '%';
+    }
+
+    rootBtn.addEventListener('click', function() {
+      rootOpen = !rootOpen;
+      rootBtn.classList.toggle('active', rootOpen);
+      vlineRoot.style.display = rootOpen ? 'block' : 'none';
+      hbarWrap.classList.toggle('open', rootOpen);
+      deptLayer.classList.toggle('open', rootOpen);
+      hint.classList.toggle('show', rootOpen);
+      if (!rootOpen) { closeAllDepts(); hideDetail(); return; }
+      if (deptLayer.children.length === 0) buildDepts();
+      requestAnimationFrame(function() {
+        var cols = deptLayer.querySelectorAll('.mm-dept-col');
+        positionHBar(Array.prototype.slice.call(cols), hbarWrap, hbar);
+      });
+    });
+
+    function buildDepts() {
+      DEPTS.forEach(function(dept) {
+        var col = document.createElement('div');
+        col.className = 'mm-dept-col';
+        col.id = 'mm-dcol-' + dept.id;
+
+        var vl = document.createElement('div');
+        vl.className = 'mm-line mm-line-v';
+        vl.style.height = '28px';
+
+        var btn = document.createElement('button');
+        btn.className = 'mm-node mm-dept ' + dept.color;
+        btn.id = 'mm-dbtn-' + dept.id;
+        btn.textContent = dept.label;
+        btn.addEventListener('click', function() { toggleDept(dept); });
+
+        col.appendChild(vl);
+        col.appendChild(btn);
+
+        if (dept.subs && dept.subs.length > 0) {
+          var subWrap = document.createElement('div');
+          subWrap.id = 'mm-sub-wrap-' + dept.id;
+          subWrap.style.display = 'none';
+          subWrap.style.flexDirection = 'column';
+          subWrap.style.alignItems = 'center';
+          subWrap.style.width = '100%';
+          /* store in subZone (full-width row), not inside the narrow dept col */
+          subZone.appendChild(subWrap);
+        }
+        deptLayer.appendChild(col);
+      });
+    }
+
+    function closeAllDepts() {
+      DEPTS.forEach(function(d) {
+        var btn = document.getElementById('mm-dbtn-' + d.id);
+        if (btn) btn.classList.remove('active');
+        if (d.subs && d.subs.length > 0) {
+          var sw = document.getElementById('mm-sub-wrap-' + d.id);
+          if (sw) sw.style.display = 'none';
+        }
+      });
+      subZone.style.display = 'none';
+      activeDept = null;
+      activeSub  = null;
+    }
+
+    function toggleDept(dept) {
+      var btn = document.getElementById('mm-dbtn-' + dept.id);
+      var isActive = activeDept === dept.id;
+      closeAllDepts();
+      hideDetail();
+      if (isActive) return;
+      activeDept = dept.id;
+      btn.classList.add('active');
+      showDetail(dept.tag, dept.tagBg, dept.label, dept.desc);
+      if (!dept.subs || dept.subs.length === 0) return;
+      var subWrap = document.getElementById('mm-sub-wrap-' + dept.id);
+      if (subWrap.children.length === 0) buildSubs(dept, subWrap);
+      subZone.style.display = 'flex';
+      subWrap.style.display = 'flex';
+      requestAnimationFrame(function() {
+        var subCols = subWrap.querySelectorAll('.mm-sub-col');
+        var subHbarWrap = subWrap.querySelector('.mm-hbar-wrap');
+        var subHbar = subWrap.querySelector('.mm-hbar');
+        if (subCols.length > 1 && subHbarWrap && subHbar) {
+          positionHBar(Array.prototype.slice.call(subCols), subHbarWrap, subHbar);
+        }
+      });
+    }
+
+    function buildSubs(dept, subWrap) {
+      var vl = document.createElement('div');
+      vl.className = 'mm-line mm-line-v';
+      vl.style.height = '24px';
+      subWrap.appendChild(vl);
+
+      var hbw = document.createElement('div');
+      hbw.className = 'mm-hbar-wrap open';
+      hbw.style.maxWidth = '100%';
+      var hb = document.createElement('div');
+      hb.className = 'mm-hbar';
+      hbw.appendChild(hb);
+      subWrap.appendChild(hbw);
+
+      var subLayer = document.createElement('div');
+      subLayer.className = 'mm-sub-layer open';
+      subLayer.style.maxWidth = (dept.subs.length * 440) + 'px';
+      subLayer.style.margin = '0 auto';
+      subWrap.appendChild(subLayer);
+
+      dept.subs.forEach(function(sub) {
+        var sc = document.createElement('div');
+        sc.className = 'mm-sub-col';
+        var svl = document.createElement('div');
+        svl.className = 'mm-line mm-line-v';
+        svl.style.height = '20px';
+        var sbtn = document.createElement('button');
+        sbtn.className = 'mm-node mm-sub';
+        sbtn.id = 'mm-sbtn-' + sub.id;
+        sbtn.textContent = sub.label;
+        if (!sub.leaves || sub.leaves.length === 0) sbtn.classList.add('no-children');
+        sbtn.addEventListener('click', function() { toggleSub(sub, dept); });
+        sc.appendChild(svl);
+        sc.appendChild(sbtn);
+        if (sub.leaves && sub.leaves.length > 0) {
+          var lw = document.createElement('div');
+          lw.id = 'mm-leaf-wrap-' + sub.id;
+          lw.style.display = 'none';
+          lw.style.flexDirection = 'column';
+          lw.style.alignItems = 'center';
+          lw.style.width = '100%';
+          sc.appendChild(lw);
+        }
+        subLayer.appendChild(sc);
+      });
+    }
+
+    function closeAllSubs(dept) {
+      dept.subs.forEach(function(s) {
+        var b = document.getElementById('mm-sbtn-' + s.id);
+        if (b) b.classList.remove('active');
+        if (s.leaves && s.leaves.length > 0) {
+          var lw = document.getElementById('mm-leaf-wrap-' + s.id);
+          if (lw) lw.style.display = 'none';
+        }
+      });
+      activeSub = null;
+    }
+
+    function toggleSub(sub, dept) {
+      var btn = document.getElementById('mm-sbtn-' + sub.id);
+      var isActive = activeSub === sub.id;
+      closeAllSubs(dept);
+      showDetail(sub.tag, sub.tagBg, sub.label, sub.desc);
+      if (isActive) { activeSub = null; return; }
+      activeSub = sub.id;
+      btn.classList.add('active');
+      if (!sub.leaves || sub.leaves.length === 0) return;
+      var lw = document.getElementById('mm-leaf-wrap-' + sub.id);
+      if (lw.children.length === 0) buildLeaves(sub, lw);
+      lw.style.display = 'flex';
+      requestAnimationFrame(function() {
+        var leafCols = lw.querySelectorAll('.mm-leaf-col');
+        var lhbw = lw.querySelector('.mm-hbar-wrap');
+        var lhb  = lw.querySelector('.mm-hbar');
+        if (leafCols.length > 1 && lhbw && lhb) {
+          positionHBar(Array.prototype.slice.call(leafCols), lhbw, lhb);
+        }
+      });
+    }
+
+    function buildLeaves(sub, lw) {
+      var vl = document.createElement('div');
+      vl.className = 'mm-line mm-line-v';
+      vl.style.height = '18px';
+      lw.appendChild(vl);
+
+      var lhbw = document.createElement('div');
+      lhbw.className = 'mm-hbar-wrap open';
+      var lhb = document.createElement('div');
+      lhb.className = 'mm-hbar';
+      lhbw.appendChild(lhb);
+      lw.appendChild(lhbw);
+
+      var ll = document.createElement('div');
+      ll.className = 'mm-leaf-layer open';
+      lw.appendChild(ll);
+
+      sub.leaves.forEach(function(leaf) {
+        var lc = document.createElement('div');
+        lc.className = 'mm-leaf-col';
+        var lvl = document.createElement('div');
+        lvl.className = 'mm-line mm-line-v';
+        lvl.style.height = '16px';
+        var ln = document.createElement('button');
+        ln.className = 'mm-node mm-leaf';
+        ln.textContent = leaf.label;
+        ln.addEventListener('click', function() { showDetail(leaf.tag, leaf.tagBg, leaf.label, leaf.desc); });
+        lc.appendChild(lvl);
+        lc.appendChild(ln);
+        ll.appendChild(lc);
+      });
+    }
+
+    window.addEventListener('resize', function() {
+      if (!rootOpen) return;
+      var cols = deptLayer.querySelectorAll('.mm-dept-col');
+      positionHBar(Array.prototype.slice.call(cols), hbarWrap, hbar);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+
+<script>
+  function toggleOrgTier(btn) {
+    var tier = btn.closest('.org-tier');
+    var body = tier.querySelector('.org-tier-body');
+    var isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+    body.classList.toggle('open', !isOpen);
+    tier.classList.toggle('open', !isOpen);
+  }
+
+  var VIDEO_SRC = 'https://drive.google.com/file/d/1wwAvkUOgfiJmIt4glcrTrSd8EBN7miiz/preview';
+
+  function openVideoLightbox() {
+    var lb = document.getElementById('videoLightbox');
+    var frame = document.getElementById('videoLightboxFrame');
+    frame.src = VIDEO_SRC;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeVideoLightbox() {
+    var lb = document.getElementById('videoLightbox');
+    var frame = document.getElementById('videoLightboxFrame');
+    frame.src = '';
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('videoLightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeVideoLightbox();
+  });
+</script>
+
+</body>
+</html>
