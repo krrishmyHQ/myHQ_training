@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>myHQ — Sales L&D · Sign In</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:        #1E22AA;
+  --blue-light:  #676BE4;
+  --mint:        #ADDFB3;
+  --mint-dim:    rgba(173,223,179,0.12);
+  --mint-line:   rgba(173,223,179,0.28);
+  --dark:        #080B1A;
+  --dark-2:      #0C0F20;
+  --white:       #FFFFFF;
+  --text-dim:    rgba(255,255,255,0.48);
+  --text-muted:  rgba(255,255,255,0.22);
+  --border:      rgba(255,255,255,0.07);
+  --sans:        'Manrope', system-ui, sans-serif;
+  --serif:       'Instrument Serif', serif;
+  --mono:        'JetBrains Mono', ui-monospace, monospace;
+  --ease:        cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { min-height: 100%; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+::selection { background: var(--mint); color: var(--blue); }
+
+body {
+  font-family: var(--sans);
+  background: var(--dark);
+  color: var(--white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+/* ── Background grid + glow ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(30,34,170,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,34,170,0.055) 1px, transparent 1px);
+  background-size: 68px 68px;
+  pointer-events: none; z-index: 0;
+}
+body::after {
+  content: '';
+  position: fixed;
+  top: -20%; left: -5%;
+  width: 55%; height: 75%;
+  background: radial-gradient(ellipse at 30% 40%, rgba(30,34,170,0.16) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── Top bar ── */
+.topbar {
+  position: relative; z-index: 10;
+  padding: 0 52px;
+  height: 60px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(8,11,26,0.88);
+  backdrop-filter: blur(14px);
+}
+.topbar::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--blue-light) 50%, var(--mint) 100%);
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-mark {
+  width: 28px; height: 28px;
+  background: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+.brand-name {
+  font-size: 14px; font-weight: 700;
+  color: var(--white); letter-spacing: -0.01em;
+}
+.brand-sep { width: 1px; height: 16px; background: rgba(255,255,255,0.1); }
+.brand-sub {
+  font-family: var(--mono);
+  font-size: 9.5px; font-weight: 500;
+  color: rgba(255,255,255,0.26);
+  letter-spacing: 0.12em; text-transform: uppercase;
+}
+.topbar-tag {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.18);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+}
+
+/* ── Main grid ── */
+.main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  min-height: calc(100vh - 60px - 50px);
+  position: relative; z-index: 1;
+}
+
+/* ── Left: copy ── */
+.left {
+  padding: 72px 64px 64px;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 7px 16px;
+  border: 1px solid var(--mint-line);
+  background: var(--mint-dim);
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  color: var(--mint);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin-bottom: 48px; width: fit-content;
+}
+.eyebrow-dot {
+  width: 5px; height: 5px;
+  background: var(--mint); border-radius: 50%;
+  animation: pulse-dot 2.2s infinite;
+}
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.35;transform:scale(0.55)} }
+
+.headline {
+  font-size: clamp(2.4rem, 4vw + 1rem, 4rem);
+  font-weight: 800; line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: var(--white);
+  margin-bottom: 40px;
+}
+.headline em {
+  font-style: normal;
+  font-family: var(--serif);
+  font-weight: 400;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: -0.02em;
+}
+.headline-mint { color: var(--mint); display: block; }
+
+.copy-block {
+  padding-left: 22px;
+  border-left: 2px solid var(--blue);
+  margin-bottom: 64px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.copy-line {
+  font-size: 15px; font-weight: 500;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+.copy-line strong { color: var(--white); font-weight: 700; }
+
+/* Chapter preview strip */
+.chapters-strip {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.ch-item {
+  padding: 20px 22px;
+  border-right: 1px solid var(--border);
+  position: relative;
+  transition: background 0.2s var(--ease);
+}
+.ch-item:last-child { border-right: none; }
+.ch-item:hover { background: rgba(30,34,170,0.07); }
+.ch-item::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--blue);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+.ch-item:hover::before { transform: scaleX(1); }
+.ch-num {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.ch-title {
+  font-size: 12px; font-weight: 700;
+  color: var(--white);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin-bottom: 5px;
+}
+.ch-desc {
+  font-size: 10.5px; font-weight: 500;
+  color: var(--text-muted); line-height: 1.55;
+}
+
+/* ── Right: form ── */
+.right {
+  background: var(--dark-2);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 60px 52px;
+  border-left: 1px solid var(--border);
+  position: relative;
+}
+.right::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--mint) 0%, transparent 100%);
+}
+.right::after {
+  content: '';
+  position: absolute; bottom: 48px; right: 48px;
+  width: 24px; height: 24px;
+  border-bottom: 1px solid rgba(173,223,179,0.12);
+  border-right: 1px solid rgba(173,223,179,0.12);
+  pointer-events: none;
+}
+
+.form-eyebrow {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--mint);
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.form-eyebrow::before {
+  content: ''; width: 18px; height: 1px;
+  background: var(--mint); flex-shrink: 0;
+}
+
+.form-title {
+  font-size: clamp(1.5rem, 2.2vw, 1.85rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  color: var(--white); line-height: 1.1;
+  margin-bottom: 10px;
+}
+
+.form-sub {
+  font-size: 13px; font-weight: 500;
+  color: var(--text-dim); line-height: 1.7;
+  margin-bottom: 36px; padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.form-group { margin-bottom: 22px; }
+.form-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.32);
+  margin-bottom: 10px;
+}
+.form-input {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 14px; font-weight: 600;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--white); outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: -0.01em;
+  border-radius: 0;
+  appearance: none;
+}
+.form-input::placeholder { color: rgba(255,255,255,0.14); font-weight: 400; }
+.form-input:focus { border-color: var(--mint); box-shadow: 0 0 0 3px rgba(173,223,179,0.07); }
+.form-input.error { border-color: rgba(103,107,228,0.7); }
+
+.form-error {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  color: var(--blue-light);
+  margin-top: 7px; display: none;
+  align-items: center; gap: 6px;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.form-error.visible { display: flex; }
+.form-hint {
+  font-family: var(--mono);
+  font-size: 9px; color: rgba(255,255,255,0.16);
+  margin-top: 7px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+.submit-btn {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 17px 24px;
+  background: var(--blue); color: var(--white);
+  border: 1.5px solid var(--blue);
+  cursor: pointer; margin-top: 8px;
+  box-shadow: 5px 5px 0 rgba(30,34,170,0.4);
+  transition: all 0.2s var(--ease);
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  position: relative;
+}
+.submit-btn:hover:not(:disabled) {
+  background: var(--mint); color: var(--dark);
+  border-color: var(--mint);
+  box-shadow: 5px 5px 0 rgba(173,223,179,0.35);
+  transform: translate(-2px, -2px);
+}
+.submit-btn:active:not(:disabled) { transform: translate(1px,1px); box-shadow: 2px 2px 0 var(--blue); }
+.submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.submit-btn.loading .btn-text { visibility: hidden; }
+.submit-btn.loading::after {
+  content: ''; position: absolute;
+  width: 15px; height: 15px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: var(--white); border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Success state */
+.success-panel { display: none; flex-direction: column; align-items: flex-start; gap: 24px; }
+.success-panel.visible { display: flex; }
+.success-icon {
+  width: 48px; height: 48px;
+  border: 1.5px solid var(--mint);
+  box-shadow: 4px 4px 0 var(--mint);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--mint); font-size: 20px; font-weight: 700;
+}
+.success-title {
+  font-size: 26px; font-weight: 800;
+  color: var(--white); letter-spacing: -0.025em; line-height: 1.15;
+}
+.success-name { color: var(--mint); }
+.success-sub {
+  font-size: 13px; font-weight: 500;
+  color: var(--text-dim); line-height: 1.7;
+  border-left: 2px solid var(--blue); padding-left: 16px;
+}
+.success-cta {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 15px 28px;
+  background: transparent; color: var(--mint);
+  border: 1.5px solid var(--mint);
+  box-shadow: 4px 4px 0 var(--mint);
+  transition: all 0.2s var(--ease); cursor: pointer;
+}
+.success-cta:hover {
+  background: var(--mint); color: var(--dark);
+  transform: translate(-2px,-2px);
+  box-shadow: 6px 6px 0 rgba(173,223,179,0.3);
+}
+
+.api-error {
+  display: none; margin-top: 16px;
+  padding: 14px 18px;
+  border: 1px solid rgba(103,107,228,0.35);
+  border-left: 3px solid var(--blue-light);
+  font-size: 10px; color: rgba(255,255,255,0.42);
+  font-weight: 600; line-height: 1.7; letter-spacing: 0.02em;
+}
+.api-error.visible { display: block; }
+.api-error .link { color: var(--mint); cursor: pointer; text-decoration: underline; }
+
+/* Footer */
+.footer {
+  position: relative; z-index: 10;
+  padding: 0 52px; height: 50px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(8,11,26,0.8);
+}
+.footer-left {
+  font-family: var(--mono);
+  font-size: 9.5px; font-weight: 600;
+  color: rgba(255,255,255,0.13); letter-spacing: 0.08em; text-transform: uppercase;
+}
+.footer-right {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.09);
+  border: 1px solid var(--border); padding: 4px 10px;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .main { grid-template-columns: 1fr; }
+  .left { padding: 52px 32px 44px; border-right: none; border-bottom: 1px solid var(--border); }
+  .right { padding: 52px 32px; }
+  .topbar, .footer { padding: 0 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">m</div>
+    <div class="brand-name">myHQ</div>
+    <div class="brand-sep"></div>
+    <div class="brand-sub">Sales L&amp;D Program</div>
+  </div>
+  <div class="topbar-tag">2026 Cohort</div>
+</div>
+
+<div class="main">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div>
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        Now Live &nbsp;·&nbsp; New Hire Onboarding
+      </div>
+
+      <div class="headline">
+        Everything you need<br>
+        <em>to close your</em>
+        <span class="headline-mint">first deal.</span>
+      </div>
+
+      <div class="copy-block">
+        <div class="copy-line">You just joined a <strong>₹500 crore platform</strong> in a ₹33 lakh crore industry.</div>
+        <div class="copy-line">Most people spend their first month figuring out the room they walked into.</div>
+        <div class="copy-line">This program gets you there <strong>before your first client call.</strong></div>
+      </div>
+
+      <div class="chapters-strip">
+        <div class="ch-item">
+          <div class="ch-num">Chapter 01</div>
+          <div class="ch-title">India CRE</div>
+          <div class="ch-desc">The industry, the market, the players — and where myHQ sits in it all</div>
+        </div>
+        <div class="ch-item">
+          <div class="ch-num">Chapter 02</div>
+          <div class="ch-title">Origin Story</div>
+          <div class="ch-desc">From a friend's café with empty seats to India's fastest-growing CRE platform</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: FORM -->
+  <div class="right">
+
+    <div id="form-panel">
+      <div class="form-eyebrow">Get Started</div>
+      <div class="form-title">Sign in to begin<br>your training.</div>
+      <div class="form-sub">Use your myHQ work email. Your progress will be tracked automatically as you move through each chapter.</div>
+
+      <div class="form-group">
+        <label class="form-label" for="input-name">Full Name</label>
+        <input class="form-input" id="input-name" type="text" placeholder="e.g. Priya Sharma" autocomplete="name">
+        <div class="form-error" id="err-name">Please enter your full name</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="input-email">Work Email</label>
+        <input class="form-input" id="input-email" type="email" placeholder="you@myhq.in" autocomplete="email">
+        <div class="form-error" id="err-email" style="display:none;">Only @myhq.in addresses are allowed</div>
+        <div class="form-hint" id="email-hint">Must be a @myhq.in address</div>
+      </div>
+
+      <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">
+        <span class="btn-text">Begin Training &nbsp;→</span>
+      </button>
+
+      <div class="api-error" id="api-error">
+        Couldn't save your details — but you can still continue. Progress may not sync this session.
+        <br><br>
+        <span class="link" onclick="proceedAnyway()">Continue anyway →</span>
+      </div>
+    </div>
+
+    <div class="success-panel" id="success-panel">
+      <div class="success-icon">✓</div>
+      <div>
+        <div class="success-title">Welcome,<br><span class="success-name" id="success-name">—</span>.</div>
+      </div>
+      <div class="success-sub">You're in. Start with Chapter 01 — the Indian CRE market overview. Each chapter unlocks the next.</div>
+      <button class="success-cta" onclick="goToHub()">Go to Course Hub &nbsp;→</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  <div class="footer-left">myHQ Sales L&amp;D &nbsp;·&nbsp; 2026</div>
+  <div class="footer-right">Internal Use Only</div>
+</div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbymEPPPIHoXCJG_tMYPa742kXgsHEBnRLEoDFeRgv8WI2KO5nd6Pn7RJ2jRf_b9_fuJWg/exec';
+
+let registeredName = '';
+let registeredEmail = '';
+
+function isMyhqEmail(val) {
+  return val.trim().toLowerCase().endsWith('@myhq.in');
+}
+function validateName(val) { return val.trim().length >= 2; }
+
+function setError(inputId, errId, show, msg) {
+  const input = document.getElementById(inputId);
+  const err = document.getElementById(errId);
+  if (show) {
+    input.classList.add('error');
+    if (msg) err.textContent = msg;
+    err.style.display = 'flex';
+    err.classList.add('visible');
+  } else {
+    input.classList.remove('error');
+    err.style.display = 'none';
+    err.classList.remove('visible');
+  }
+}
+
+document.getElementById('input-name').addEventListener('input', function() {
+  if (this.value.trim().length >= 2) setError('input-name', 'err-name', false);
+});
+
+document.getElementById('input-email').addEventListener('input', function() {
+  const val = this.value.trim().toLowerCase();
+  const hint = document.getElementById('email-hint');
+  if (val.length === 0) {
+    setError('input-email', 'err-email', false);
+    hint.style.display = '';
+    return;
+  }
+  if (val.includes('@') && !val.endsWith('@myhq.in')) {
+    setError('input-email', 'err-email', true, 'Only @myhq.in addresses are allowed');
+    hint.style.display = 'none';
+  } else if (isMyhqEmail(val)) {
+    setError('input-email', 'err-email', false);
+    hint.style.display = 'none';
+  }
+});
+
+document.getElementById('input-email').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleSubmit();
+});
+document.getElementById('input-name').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('input-email').focus();
+});
+
+async function handleSubmit() {
+  const name = document.getElementById('input-name').value.trim();
+  const email = document.getElementById('input-email').value.trim().toLowerCase();
+  let valid = true;
+
+  if (!validateName(name)) {
+    setError('input-name', 'err-name', true, 'Please enter your full name');
+    valid = false;
+  }
+  if (!email) {
+    setError('input-email', 'err-email', true, 'Please enter your work email');
+    valid = false;
+  } else if (!isMyhqEmail(email)) {
+    setError('input-email', 'err-email', true, 'Only @myhq.in addresses are allowed');
+    valid = false;
+  }
+  if (!valid) return;
+
+  registeredName = name;
+  registeredEmail = email;
+
+  const btn = document.getElementById('submit-btn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  saveToStorage(name, email);
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'register', name, email })
+    });
+    showSuccess();
+  } catch (err) {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    document.getElementById('api-error').classList.add('visible');
+  }
+}
+
+function showSuccess() {
+  document.getElementById('success-name').textContent = registeredName.split(' ')[0];
+  document.getElementById('form-panel').style.display = 'none';
+  document.getElementById('success-panel').classList.add('visible');
+}
+
+function saveToStorage(name, email) {
+  localStorage.setItem('myhq_name', name);
+  localStorage.setItem('myhq_email', email);
+  localStorage.setItem('myhq_registered_at', new Date().toISOString());
+  sessionStorage.setItem('myhq_name', name);
+  sessionStorage.setItem('myhq_email', email);
+}
+
+function goToHub() { window.location.href = 'hub.html'; }
+
+function proceedAnyway() {
+  saveToStorage(
+    registeredName || document.getElementById('input-name').value.trim(),
+    registeredEmail || document.getElementById('input-email').value.trim().toLowerCase()
+  );
+  showSuccess();
+}
+
+window.addEventListener('DOMContentLoaded', function() {
+  const savedName = localStorage.getItem('myhq_name');
+  const savedEmail = localStorage.getItem('myhq_email');
+  if (savedName && savedEmail && savedEmail.endsWith('@myhq.in')) {
+    // Already registered — go straight to hub
+    window.location.href = 'hub.html';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>myHQ — Course Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:       #1E22AA;
+  --blue-light: #676BE4;
+  --mint:       #ADDFB3;
+  --paper:      #F4F1E8;
+  --paper-2:    #ECE7D8;
+  --ink:        #0B0F2C;
+  --ink-2:      #2A2E4A;
+  --body:       #4A4D63;
+  --muted:      #94909C;
+  --hairline:   rgba(11,15,44,0.10);
+  --hairline-2: rgba(11,15,44,0.06);
+  --white:      #FFFFFF;
+  --sans:       'Manrope', system-ui, sans-serif;
+  --serif:      'Instrument Serif', serif;
+  --mono:       'JetBrains Mono', ui-monospace, monospace;
+  --ease:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --pad-x:      clamp(24px, 5vw, 64px);
+  --max:        1100px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+::selection { background: var(--mint); color: var(--blue); }
+
+body {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(11,15,44,0.12); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+
+/* ── Top nav ── */
+.topnav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(244,241,232,0.88);
+  backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid var(--hairline-2);
+}
+.topnav-inner {
+  max-width: var(--max); margin: 0 auto;
+  padding: 14px var(--pad-x);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 24px;
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.brand-mark {
+  width: 30px; height: 30px;
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 18px;
+  color: var(--paper); line-height: 1;
+}
+.brand-name {
+  font-size: 14px; font-weight: 700;
+  color: var(--ink); letter-spacing: -0.01em;
+}
+.brand-sep { width: 1px; height: 16px; background: var(--hairline); }
+.brand-sub {
+  font-family: var(--mono);
+  font-size: 9.5px; font-weight: 500;
+  color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+}
+
+.nav-right {
+  display: flex; align-items: center; gap: 16px;
+}
+.nav-user {
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+}
+.nav-user span { color: var(--ink); }
+.nav-signout {
+  font-family: var(--mono);
+  font-size: 9.5px; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+  background: none; border: none; cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.2s;
+}
+.nav-signout:hover { color: var(--blue); }
+
+/* ── Overall progress bar ── */
+.progress-banner {
+  background: var(--paper-2);
+  border-bottom: 1px solid var(--hairline);
+}
+.progress-banner-inner {
+  max-width: var(--max); margin: 0 auto;
+  padding: 14px var(--pad-x);
+  display: flex; align-items: center; gap: 20px;
+}
+.prog-label {
+  font-family: var(--mono);
+  font-size: 9.5px; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.prog-track {
+  flex: 1; height: 4px;
+  background: var(--hairline);
+  border-radius: 999px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 999px;
+  transition: width 0.8s var(--ease);
+}
+.prog-pct {
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 700;
+  color: var(--blue); letter-spacing: 0.06em;
+  min-width: 36px; text-align: right;
+}
+
+/* ── Hero ── */
+.hero {
+  padding: 72px var(--pad-x) 64px;
+  max-width: var(--max); margin: 0 auto;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 500;
+  color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 22px;
+}
+.hero-eyebrow::before {
+  content: ''; width: 6px; height: 6px;
+  background: var(--blue); border-radius: 50%;
+}
+.hero-h1 {
+  font-family: var(--sans);
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: 800; line-height: 1.04;
+  letter-spacing: -0.04em; color: var(--ink);
+  margin-bottom: 16px;
+}
+.hero-h1 em {
+  font-style: normal; font-family: var(--serif);
+  font-weight: 400; color: var(--muted); letter-spacing: -0.02em;
+}
+.hero-h1 .blue { color: var(--blue); }
+.hero-sub {
+  font-size: 16px; color: var(--body);
+  line-height: 1.65; max-width: 520px;
+}
+
+/* ── Chapter grid ── */
+.chapters-wrap {
+  padding: 0 var(--pad-x) 80px;
+  max-width: var(--max); margin: 0 auto;
+}
+.chapters-label {
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.14em; text-transform: uppercase;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.chapters-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--hairline);
+}
+.chapters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── Chapter card ── */
+.chapter-card {
+  background: var(--white);
+  border: 1px solid var(--hairline);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease), border-color 0.3s;
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.chapter-card.unlocked:hover {
+  box-shadow: 0 12px 40px rgba(11,15,44,0.09);
+  transform: translateY(-3px);
+  border-color: rgba(11,15,44,0.14);
+}
+.chapter-card.locked {
+  background: var(--paper-2);
+  opacity: 0.72;
+}
+.chapter-card.completed { border-color: rgba(173,223,179,0.5); }
+.chapter-card.completed::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--mint) 0%, rgba(173,223,179,0.3) 100%);
+}
+.chapter-card.unlocked:not(.completed)::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue) 0%, var(--blue-light) 100%);
+}
+
+.card-header {
+  padding: 28px 28px 20px;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+  border-bottom: 1px solid var(--hairline-2);
+}
+.card-num {
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.card-title {
+  font-size: 20px; font-weight: 700;
+  color: var(--ink); letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+.card-title em {
+  font-style: normal; font-family: var(--serif);
+  font-weight: 400; color: var(--muted); letter-spacing: -0.01em;
+}
+
+/* Status badge */
+.card-status {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 999px;
+}
+.status-not-started { background: var(--paper-2); color: var(--muted); }
+.status-in-progress { background: rgba(30,34,170,0.08); color: var(--blue); }
+.status-completed { background: rgba(173,223,179,0.3); color: #2e7d36; }
+.status-locked {
+  background: rgba(11,15,44,0.05); color: var(--muted);
+  display: flex; align-items: center; gap: 5px;
+}
+
+.card-body { padding: 20px 28px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+.card-desc {
+  font-size: 14.5px; color: var(--body);
+  line-height: 1.65; flex: 1;
+}
+
+/* Chapter progress bar */
+.card-progress { display: flex; flex-direction: column; gap: 6px; }
+.card-prog-labels {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.card-prog-label {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase;
+}
+.card-prog-pct {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 700;
+  color: var(--blue);
+}
+.card-prog-track {
+  height: 3px; background: var(--hairline); border-radius: 999px; overflow: hidden;
+}
+.card-prog-fill {
+  height: 100%; background: var(--blue); border-radius: 999px;
+  transition: width 1s var(--ease);
+}
+.chapter-card.completed .card-prog-fill { background: var(--mint); }
+
+.card-footer { padding: 0 28px 24px; }
+
+/* CTA button */
+.card-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--sans);
+  font-size: 13px; font-weight: 600;
+  padding: 13px 22px; border-radius: 999px;
+  text-decoration: none; cursor: pointer; border: none;
+  transition: all 0.25s var(--ease); width: 100%;
+  justify-content: center;
+}
+.cta-primary {
+  background: var(--ink); color: var(--paper);
+}
+.cta-primary:hover { background: var(--blue); }
+.cta-primary .arrow { transition: transform 0.25s var(--ease); }
+.cta-primary:hover .arrow { transform: translateX(4px); }
+
+.cta-secondary {
+  background: rgba(173,223,179,0.2); color: #2e7d36;
+  border: 1px solid rgba(173,223,179,0.5);
+}
+.cta-secondary:hover { background: rgba(173,223,179,0.35); }
+
+.cta-locked {
+  background: var(--paper-2); color: var(--muted);
+  cursor: not-allowed; opacity: 0.7;
+}
+
+/* ── Unlock section (for locked chapters) ── */
+.unlock-section {
+  padding: 16px 28px 24px;
+  border-top: 1px dashed var(--hairline);
+  background: rgba(11,15,44,0.02);
+}
+.unlock-label {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.unlock-label svg { width: 11px; height: 11px; stroke: currentColor; fill: none; }
+.unlock-row {
+  display: flex; gap: 8px;
+}
+.unlock-input {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 11px 14px;
+  background: var(--white);
+  border: 1px solid var(--hairline);
+  color: var(--ink); outline: none;
+  border-radius: 10px;
+  transition: border-color 0.2s;
+}
+.unlock-input::placeholder { color: var(--muted); font-weight: 400; letter-spacing: 0.06em; text-transform: none; }
+.unlock-input:focus { border-color: var(--blue); }
+.unlock-input.error { border-color: rgba(255,115,81,0.6); animation: shake 0.35s var(--ease); }
+@keyframes shake {
+  0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)}
+}
+.unlock-btn {
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 600;
+  padding: 11px 18px; border-radius: 10px;
+  background: var(--blue); color: var(--white);
+  border: none; cursor: pointer;
+  transition: all 0.2s var(--ease); white-space: nowrap;
+}
+.unlock-btn:hover { background: var(--ink); }
+.unlock-hint {
+  font-size: 11px; color: var(--muted);
+  margin-top: 8px; line-height: 1.5;
+}
+.unlock-hint strong { color: var(--body); }
+
+/* ── Completion banner ── */
+.completion-banner {
+  display: none;
+  background: rgba(173,223,179,0.15);
+  border: 1px solid rgba(173,223,179,0.5);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin: 0 var(--pad-x) 40px;
+  max-width: var(--max);
+  margin-left: auto; margin-right: auto;
+  align-items: center; gap: 20px;
+}
+.completion-banner.visible { display: flex; }
+.cb-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(173,223,179,0.35);
+  display: flex; align-items: center; justify-content: center;
+  color: #2e7d36; font-size: 20px; flex-shrink: 0;
+}
+.cb-text { flex: 1; }
+.cb-title { font-weight: 700; color: var(--ink); margin-bottom: 3px; font-size: 15px; }
+.cb-sub { font-size: 13px; color: var(--body); }
+
+/* ── Footer ── */
+.footer {
+  border-top: 1px solid var(--hairline);
+  background: var(--paper);
+  padding: 22px var(--pad-x);
+}
+.footer-inner {
+  max-width: var(--max); margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px; font-weight: 500;
+  color: var(--muted); letter-spacing: 0.06em;
+}
+
+/* Reveal */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* Responsive */
+@media (max-width: 720px) {
+  .chapters-grid { grid-template-columns: 1fr; }
+  .hero { padding: 52px var(--pad-x) 40px; }
+  .chapters-wrap { padding-bottom: 56px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="landing.html">
+      <div class="brand-mark">m</div>
+      <div class="brand-name">myHQ</div>
+      <div class="brand-sep"></div>
+      <div class="brand-sub">Sales L&amp;D</div>
+    </a>
+    <div class="nav-right">
+      <div class="nav-user">Logged in as <span id="nav-username">—</span></div>
+      <button class="nav-signout" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
+</nav>
+
+<!-- OVERALL PROGRESS -->
+<div class="progress-banner">
+  <div class="progress-banner-inner">
+    <div class="prog-label">Overall progress</div>
+    <div class="prog-track">
+      <div class="prog-fill" id="overall-fill" style="width:0%"></div>
+    </div>
+    <div class="prog-pct" id="overall-pct">0%</div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero reveal">
+  <div class="hero-eyebrow">Course Hub · New Hire Onboarding</div>
+  <h1 class="hero-h1">
+    Your chapters,<br>
+    <em>in order.</em>
+    <span class="blue"> Start with one.</span>
+  </h1>
+  <p class="hero-sub">Each chapter unlocks the next. Complete Chapter 01 to get the access code for Chapter 02.</p>
+</div>
+
+<!-- COMPLETION BANNER -->
+<div class="completion-banner" id="completion-banner">
+  <div class="cb-icon">🎉</div>
+  <div class="cb-text">
+    <div class="cb-title">All chapters complete</div>
+    <div class="cb-sub">You've finished the onboarding program. Your manager will be in touch about next steps.</div>
+  </div>
+</div>
+
+<!-- CHAPTERS -->
+<div class="chapters-wrap">
+  <div class="chapters-label">Chapters</div>
+  <div class="chapters-grid" id="chapters-grid">
+
+    <!-- CHAPTER 1 -->
+    <div class="chapter-card unlocked reveal" id="card-ch1">
+      <div class="card-header">
+        <div>
+          <div class="card-num">Chapter 01</div>
+          <div class="card-title">India <em>CRE</em> Market</div>
+        </div>
+        <div class="card-status" id="status-ch1">Not started</div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">The industry you just walked into. Market size, flex vs. conventional, key players, deal types — everything you need to sound like you've been here for years.</div>
+        <div class="card-progress">
+          <div class="card-prog-labels">
+            <div class="card-prog-label">Progress</div>
+            <div class="card-prog-pct" id="pct-ch1">0%</div>
+          </div>
+          <div class="card-prog-track">
+            <div class="card-prog-fill" id="fill-ch1" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a class="card-cta cta-primary" href="chapter1.html" id="cta-ch1">
+          <span id="cta-ch1-text">Start chapter</span>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- CHAPTER 2 -->
+    <div class="chapter-card locked reveal" id="card-ch2" style="transition-delay:0.1s">
+      <div class="card-header">
+        <div>
+          <div class="card-num">Chapter 02</div>
+          <div class="card-title">Origin <em>Story</em></div>
+        </div>
+        <div class="card-status status-locked" id="status-ch2">
+          <svg viewBox="0 0 24 24" stroke-width="2.2" width="10" height="10"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Locked
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-desc">From a friend's café with empty seats to India's fastest-growing CRE platform. The founding story, the funding rounds, the people, the org — told the way it actually happened.</div>
+        <div class="card-progress" id="prog-ch2" style="display:none">
+          <div class="card-prog-labels">
+            <div class="card-prog-label">Progress</div>
+            <div class="card-prog-pct" id="pct-ch2">0%</div>
+          </div>
+          <div class="card-prog-track">
+            <div class="card-prog-fill" id="fill-ch2" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer" id="footer-ch2">
+        <button class="card-cta cta-locked" disabled>
+          <svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="2" width="14" height="14"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Complete Chapter 01 first
+        </button>
+      </div>
+      <div class="unlock-section" id="unlock-section-ch2">
+        <div class="unlock-label">
+          <svg viewBox="0 0 24 24" stroke-width="2.2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+          Have an unlock code?
+        </div>
+        <div class="unlock-row">
+          <input class="unlock-input" id="code-ch2" type="text" placeholder="Enter code from Chapter 01" maxlength="20" autocomplete="off" spellcheck="false">
+          <button class="unlock-btn" onclick="tryUnlock('ch2')">Unlock</button>
+        </div>
+        <div class="unlock-hint" id="hint-ch2">Complete Chapter 01 to receive your unlock code. The code appears at the end of the chapter.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <span>myHQ Sales L&amp;D · 2026</span>
+    <span>Internal use only</span>
+  </div>
+</footer>
+
+<script>
+// ── Secret codes ──
+// Chapter 1 completion → unlocks Chapter 2
+// Update this code to match what chapter1.html shows at completion
+const CODES = {
+  ch2: 'SPARK2016'
+};
+
+// ── Chapter config ──
+const CHAPTERS = {
+  ch1: {
+    storageKey: 'myhq_ch1_progress',
+    completeKey: 'myhq_ch1_complete',
+    href: 'chapter1.html'
+  },
+  ch2: {
+    storageKey: 'myhq_ch2_progress',
+    completeKey: 'myhq_ch2_complete',
+    unlockedKey: 'myhq_ch2_unlocked',
+    href: 'chapter2.html'
+  }
+};
+
+// ── On load ──
+window.addEventListener('DOMContentLoaded', function() {
+  // Auth guard
+  const name = localStorage.getItem('myhq_name');
+  const email = localStorage.getItem('myhq_email');
+  if (!name || !email || !email.endsWith('@myhq.in')) {
+    window.location.href = 'landing.html';
+    return;
+  }
+
+  // Show username
+  document.getElementById('nav-username').textContent = name.split(' ')[0];
+
+  // Load state
+  updateHub();
+
+  // Reveal animations
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // Enter key on code input
+  document.getElementById('code-ch2').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') tryUnlock('ch2');
+  });
+});
+
+function updateHub() {
+  const ch1Progress = parseInt(localStorage.getItem('myhq_ch1_progress') || '0');
+  const ch1Complete = localStorage.getItem('myhq_ch1_complete') === 'true';
+  const ch2Unlocked = localStorage.getItem('myhq_ch2_unlocked') === 'true';
+  const ch2Progress = parseInt(localStorage.getItem('myhq_ch2_progress') || '0');
+  const ch2Complete = localStorage.getItem('myhq_ch2_complete') === 'true';
+
+  // ── Chapter 1 ──
+  const card1 = document.getElementById('card-ch1');
+  const pct1 = document.getElementById('pct-ch1');
+  const fill1 = document.getElementById('fill-ch1');
+  const status1 = document.getElementById('status-ch1');
+  const cta1text = document.getElementById('cta-ch1-text');
+
+  fill1.style.width = ch1Progress + '%';
+  pct1.textContent = ch1Progress + '%';
+
+  if (ch1Complete) {
+    card1.classList.add('completed');
+    status1.textContent = 'Completed';
+    status1.className = 'card-status status-completed';
+    cta1text.textContent = 'Review chapter';
+  } else if (ch1Progress > 0) {
+    status1.textContent = 'In progress';
+    status1.className = 'card-status status-in-progress';
+    cta1text.textContent = 'Continue';
+  } else {
+    status1.textContent = 'Not started';
+    status1.className = 'card-status status-not-started';
+    cta1text.textContent = 'Start chapter';
+  }
+
+  // ── Chapter 2 ──
+  const card2 = document.getElementById('card-ch2');
+  const footer2 = document.getElementById('footer-ch2');
+  const unlockSec = document.getElementById('unlock-section-ch2');
+  const progCh2 = document.getElementById('prog-ch2');
+  const status2 = document.getElementById('status-ch2');
+
+  if (ch2Unlocked) {
+    card2.classList.remove('locked');
+    card2.classList.add('unlocked');
+
+    // Show progress
+    progCh2.style.display = '';
+    document.getElementById('fill-ch2').style.width = ch2Progress + '%';
+    document.getElementById('pct-ch2').textContent = ch2Progress + '%';
+
+    // Update status
+    if (ch2Complete) {
+      card2.classList.add('completed');
+      status2.textContent = 'Completed';
+      status2.className = 'card-status status-completed';
+    } else if (ch2Progress > 0) {
+      status2.textContent = 'In progress';
+      status2.className = 'card-status status-in-progress';
+    } else {
+      status2.textContent = 'Unlocked';
+      status2.className = 'card-status status-in-progress';
+    }
+
+    // Replace footer with CTA
+    const ctaText = ch2Complete ? 'Review chapter' : ch2Progress > 0 ? 'Continue' : 'Start chapter';
+    footer2.innerHTML = `<a class="card-cta cta-primary" href="chapter2.html"><span>${ctaText}</span><span class="arrow">→</span></a>`;
+    unlockSec.style.display = 'none';
+  } else if (ch1Complete) {
+    // Ch1 done — show hint with code hint, remove disabled CTA
+    footer2.innerHTML = `<button class="card-cta cta-locked" disabled style="opacity:0.5">Enter unlock code below</button>`;
+    document.getElementById('hint-ch2').innerHTML = 'Chapter 01 complete. <strong>Find your unlock code at the end of Chapter 01</strong> and enter it above.';
+  }
+
+  // ── Overall progress ──
+  let totalPct = Math.round((ch1Progress + ch2Progress) / 2);
+  document.getElementById('overall-fill').style.width = totalPct + '%';
+  document.getElementById('overall-pct').textContent = totalPct + '%';
+
+  // ── All complete banner ──
+  if (ch1Complete && ch2Complete) {
+    document.getElementById('completion-banner').classList.add('visible');
+  }
+}
+
+function tryUnlock(chapter) {
+  const input = document.getElementById('code-' + chapter);
+  const entered = input.value.trim().toUpperCase();
+  const correct = CODES[chapter].toUpperCase();
+
+  if (entered === correct) {
+    localStorage.setItem('myhq_' + chapter + '_unlocked', 'true');
+    input.classList.remove('error');
+    updateHub();
+    // Smooth scroll to ch2 card
+    setTimeout(() => {
+      document.getElementById('card-ch2').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 200);
+  } else {
+    input.classList.add('error');
+    input.value = '';
+    input.placeholder = 'Incorrect code — try again';
+    setTimeout(() => {
+      input.classList.remove('error');
+      input.placeholder = 'Enter code from Chapter 01';
+    }, 2000);
+  }
+}
+
+function signOut() {
+  if (confirm('Sign out and return to the login page?')) {
+    localStorage.removeItem('myhq_name');
+    localStorage.removeItem('myhq_email');
+    localStorage.removeItem('myhq_registered_at');
+    window.location.href = 'landing.html';
+  }
+}
+</script>
+</body>
+</html>
