@@ -367,28 +367,6 @@ body {
 }
 .unlock-hint strong { color: var(--body); }
 
-/* ── Completion banner ── */
-.completion-banner {
-  display: none;
-  background: rgba(173,223,179,0.15);
-  border: 1px solid rgba(173,223,179,0.5);
-  border-radius: 16px;
-  padding: 20px 24px;
-  margin: 0 var(--pad-x) 40px;
-  max-width: var(--max);
-  margin-left: auto; margin-right: auto;
-  align-items: center; gap: 20px;
-}
-.completion-banner.visible { display: flex; }
-.cb-icon {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: rgba(173,223,179,0.35);
-  display: flex; align-items: center; justify-content: center;
-  color: #2e7d36; font-size: 20px; flex-shrink: 0;
-}
-.cb-text { flex: 1; }
-.cb-title { font-weight: 700; color: var(--ink); margin-bottom: 3px; font-size: 15px; }
-.cb-sub { font-size: 13px; color: var(--body); }
 
 /* ── Footer ── */
 .footer {
@@ -454,15 +432,6 @@ body {
     <span class="blue"> Start with one.</span>
   </h1>
   <p class="hero-sub">Each chapter unlocks the next. Complete Chapter 01 to get the access code for Chapter 02.</p>
-</div>
-
-<!-- COMPLETION BANNER -->
-<div class="completion-banner" id="completion-banner">
-  <div class="cb-icon">🎉</div>
-  <div class="cb-text">
-    <div class="cb-title">All chapters complete</div>
-    <div class="cb-sub">You've finished the onboarding program. Your manager will be in touch about next steps.</div>
-  </div>
 </div>
 
 <!-- CHAPTERS -->
@@ -679,10 +648,6 @@ function updateHub() {
   document.getElementById('overall-fill').style.width = totalPct + '%';
   document.getElementById('overall-pct').textContent = totalPct + '%';
 
-  // ── All complete banner ──
-  if (ch1Complete && ch2Complete) {
-    document.getElementById('completion-banner').classList.add('visible');
-  }
 }
 
 function tryUnlock(chapter) {
