@@ -607,16 +607,11 @@ body::before { content: none; }
   text-decoration: none;
 }
 .brand-mark {
-  width: 32px; height: 32px;
-  background: var(--ink);
-  border-radius: 8px;
-  display: grid; place-items: center;
-  color: var(--paper);
-  font-family: var(--serif);
-  font-size: 18px;
-  line-height: 1;
+  height: 28px;
+  width: auto;
+  display: block;
+  object-fit: contain;
 }
-.brand-mark svg { width: 16px; height: 16px; }
 
 .nav-center {
   display: flex;
@@ -2295,7 +2290,7 @@ body::before { content: none; }
 <nav class="topnav">
   <div class="topnav-inner">
     <a class="brand" href="index.html">
-      <span class="brand-mark">m</span>
+      <img class="brand-mark" src="Logo_myHQ.png" alt="myHQ">
       <span>myHQ — The Origin Story</span>
     </a>
     <div class="nav-center">
